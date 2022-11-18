@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "net.liquidev.dawd3.mixin",
+  "compatibilityLevel": "JAVA_${java}",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "SoundManagerAccessor",
+    "SoundSystemAccessor"
+  ]
+}

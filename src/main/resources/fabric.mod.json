@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "dawd3",
+  "version": "${version}",
+  "name": "dawd³",
+  "description": "music making experiments",
+  "authors": [
+    "liquidev"
+  ],
+  "contact": {
+    "homepage": "https://liquidev.net/",
+    "issues": "https://liquidev.net/",
+    "sources": "https://liquidev.net/"
+  },
+  "license": "MIT",
+  "icon": "assets/dawd3/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "net.liquidev.dawd3.Mod"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "net.liquidev.dawd3.Mod"
+      }
+    ]
+  },
+  "mixins": [
+    "dawd3.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabricloader}",
+    "fabric-api": ">=${fabric_api}",
+    "fabric-language-kotlin": ">=${fabric_language_kotlin}",
+    "minecraft": ">=${minecraft}",
+    "java": ">=${java}"
+  }
+}
