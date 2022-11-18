@@ -1,8 +1,10 @@
 use std::cell::RefCell;
 use std::fmt::Display;
+use std::fs::File;
 
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use cpal::{BufferSize, Device, Host, SampleRate, Stream, StreamConfig};
+use hound::{SampleFormat, WavSpec};
 use jni::objects::{JClass, JMethodID, JObject};
 use jni::signature::ReturnType;
 use jni::sys::jvalue;
@@ -157,6 +159,7 @@ pub extern "system" fn Java_net_liquidev_d3r_D3r_openOutputStream(
         let generator_ref = env.new_global_ref(generator).map_err(|e| e.to_string())?;
         let jvm = env.get_java_vm().map_err(|e| e.to_string())?;
         let mut initialized = false;
+
         let stream = device
             .build_output_stream(
                 &config.clone(),

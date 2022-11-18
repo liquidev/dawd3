@@ -1,9 +1,12 @@
 package net.liquidev.dawd3.sound
 
 import net.liquidev.d3r.D3r
+import org.slf4j.LoggerFactory
 
 /** Common sound utilities. */
 object Sound {
+    val logger = LoggerFactory.getLogger("dawd³/sound")
+
     const val sampleRate = 48000
     private const val bufferSize = 256
 
