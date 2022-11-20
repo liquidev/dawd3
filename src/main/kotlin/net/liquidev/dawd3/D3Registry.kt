@@ -7,8 +7,8 @@ abstract class D3Registry<T> {
 
     var registered = arrayListOf<Registered<T>>()
 
-    fun add(id: String, item: T): Registered<T> {
-        val entry = Registered(Identifier(Mod.id, id), item)
+    fun add(id: Identifier, item: T): Registered<T> {
+        val entry = Registered(id, item)
         registered.add(entry)
         return entry
     }

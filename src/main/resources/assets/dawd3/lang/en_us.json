@@ -1,3 +1,5 @@
 {
-  "item.dawd3.patch_cable": "Patch Cable"
+  "itemGroup.dawd3.main": "dawd³",
+  "item.dawd3.patch_cable": "Patch Cable",
+  "block.dawd3.speaker": "Speaker"
 }

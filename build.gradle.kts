@@ -17,7 +17,11 @@ dependencies {
     minecraft("com.mojang", "minecraft", project.extra["minecraft_version"] as String)
     mappings("net.fabricmc", "yarn", project.extra["yarn_mappings"] as String, null, "v2")
     modImplementation("net.fabricmc", "fabric-loader", project.extra["loader_version"] as String)
-    modImplementation("net.fabricmc.fabric-api", "fabric-api", project.extra["fabric_version"] as String)
+    modImplementation(
+        "net.fabricmc.fabric-api",
+        "fabric-api",
+        project.extra["fabric_version"] as String
+    )
     modImplementation(
         "net.fabricmc",
         "fabric-language-kotlin",
@@ -34,6 +38,27 @@ subprojects {
 rustImport {
     baseDir.set("/d3r")
     layout.set("flat")
+}
+
+val mainSourceSet = sourceSets.main.get()
+
+val datagenDir = layout.projectDirectory.dir("src").dir(mainSourceSet.name).dir("generated")
+loom {
+    runs {
+        create("datagenClient") {
+            inherit(runConfigs["client"])
+            name("Data Generation")
+            vmArg("-Dfabric-api.datagen")
+            vmArg("-Dfabric-api.datagen.output-dir=$datagenDir")
+            vmArg("-Dfabric-api.datagen.modid=dawd3")
+            ideConfigGenerated(true)
+            runDir("build/datagen")
+        }
+    }
+}
+
+sourceSets.named(mainSourceSet.name) {
+    resources.srcDir(datagenDir)
 }
 
 tasks {

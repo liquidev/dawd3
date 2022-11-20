@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 public class D3r {
-    private static final Logger LOGGER = LoggerFactory.getLogger("dawd³/d3r");
+    private static final Logger LOGGER = LoggerFactory.getLogger("dawd3/d3r");
     private static Path tempDir = null;
 
     public static void load() throws D3rException, IOException {

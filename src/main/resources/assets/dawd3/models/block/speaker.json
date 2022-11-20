@@ -1,6 +1,0 @@
-{
-  "parent": "dawd3:block/module_with_front",
-  "textures": {
-    "front": "dawd3:block/speaker_front"
-  }
-}

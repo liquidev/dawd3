@@ -4,33 +4,45 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.liquidev.d3r.D3r
+import net.liquidev.dawd3.audio.Audio
 import net.liquidev.dawd3.block.Blocks
+import net.liquidev.dawd3.block.entity.registerBlockEntityEvents
 import net.liquidev.dawd3.item.Items
-import net.liquidev.dawd3.sound.Sound
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 @Suppress("UNUSED")
 object Mod : ModInitializer, ClientModInitializer {
     const val id = "dawd3"
 
-    private val logger = LoggerFactory.getLogger("dawd³")
+    val logger = logger(null)
 
     override fun onInitialize() {
         logger.info("hello, sound traveler! welcome to the dawd³ experience")
-
-        Blocks.blockRegistry.registerAll()
+        Blocks.initialize()
         Items.registry.registerAll()
     }
 
     override fun onInitializeClient() {
         logger.info("booting up sound engine")
         D3r.load()
-        Sound.forceInitializationNow()
+        Audio.forceInitializationNow()
 
         ClientLifecycleEvents.CLIENT_STOPPING.register {
             logger.info("shutting down sound engine")
-            Sound.deinitialize()
+            Audio.deinitialize()
             D3r.unload()
         }
+
+        registerBlockEntityEvents()
     }
+
+    private fun loggerName(name: String?): String =
+        if (name != null) "$id/$name" else id
+
+    fun logger(name: String?): Logger =
+        LoggerFactory.getLogger(loggerName(name))
+
+    inline fun <reified T> logger(): Logger =
+        logger(T::class.simpleName)
 }

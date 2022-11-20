@@ -6,7 +6,5 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "SoundManagerAccessor",
-    "SoundSystemAccessor"
   ]
 }

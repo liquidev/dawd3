@@ -30,14 +30,20 @@ object Items {
         .build()
 
     // Icon for creative tab
-    val dawd3 = registry.add("dawd3", RegisteredItem(Item(FabricItemSettings())).hiddenFromCreativeTab())
+    val dawd3 = registry.add(
+        Identifier(Mod.id, "dawd3"),
+        RegisteredItem(Item(FabricItemSettings())).hiddenFromCreativeTab()
+    )
 
     // Tools
-    val patchCable = addItem("patch_cable", PatchCable(FabricItemSettings().group(ItemGroup.REDSTONE)))
+    val patchCable =
+        addItem("patch_cable", PatchCable(FabricItemSettings().group(ItemGroup.REDSTONE)))
 
-    fun addItem(name: String, item: Item) {
+    fun addItem(name: Identifier, item: Item): D3Registry.Registered<RegisteredItem> =
         registry.add(name, RegisteredItem(item))
-    }
+
+    fun addItem(name: String, item: Item) =
+        addItem(Identifier(Mod.id, name), item)
 
     data class RegisteredItem(
         val item: Item,

@@ -27,6 +27,12 @@
         "adapter": "kotlin",
         "value": "net.liquidev.dawd3.Mod"
       }
+    ],
+    "fabric-datagen": [
+      {
+        "adapter": "kotlin",
+        "value": "net.liquidev.dawd3.datagen.Datagen"
+      }
     ]
   },
   "mixins": [
