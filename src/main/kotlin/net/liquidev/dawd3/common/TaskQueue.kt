@@ -1,17 +1,17 @@
 package net.liquidev.dawd3.common
 
-import java.util.concurrent.Executor
+import java.util.function.Function
 
-class TaskQueue : Executor {
-    private val tasks = arrayListOf<Runnable>()
+class TaskQueue<T, R> {
+    private val tasks = arrayListOf<Function<T, R>>()
 
-    override fun execute(task: Runnable) {
+    fun enqueue(task: Function<T, R>) {
         tasks.add(task)
     }
 
-    fun flush() {
+    fun flush(argument: T) {
         for (task in tasks) {
-            task.run()
+            task.apply(argument)
         }
         tasks.clear()
     }

@@ -1,10 +1,9 @@
 package net.liquidev.dawd3.audio.generator
 
 import net.liquidev.dawd3.audio.Audio
-import net.liquidev.dawd3.audio.unit.Amplitude
 import kotlin.math.sin
 
-class SineOscGenerator(frequency: Float, private val amplitude: Amplitude) : AudioGenerator() {
+class SineOscGenerator(frequency: Float) : AudioGenerator() {
     private val phaseStep = (1.0f / Audio.sampleRate.toFloat()) * frequency
     private var phase = 0.0f
 

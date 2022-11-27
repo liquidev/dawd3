@@ -6,8 +6,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.liquidev.d3r.D3r
 import net.liquidev.dawd3.audio.Audio
 import net.liquidev.dawd3.block.Blocks
-import net.liquidev.dawd3.block.entity.registerBlockEntityEvents
+import net.liquidev.dawd3.block.entity.registerClientBlockEntityEvents
 import net.liquidev.dawd3.item.Items
+import net.liquidev.dawd3.net.Packets
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -34,7 +35,9 @@ object Mod : ModInitializer, ClientModInitializer {
             D3r.unload()
         }
 
-        registerBlockEntityEvents()
+        registerClientBlockEntityEvents()
+        Blocks.initializeClient()
+        Packets.registerClientReceivers()
     }
 
     private fun loggerName(name: String?): String =

@@ -4,6 +4,6 @@ package net.liquidev.dawd3.audio.device
 interface Device {
     fun process(sampleCount: Int, channels: Int)
 
-    fun visitInputPorts(visit: (PortName, InputPort) -> Unit) {}
-    fun visitOutputPorts(visit: (PortName, OutputPort) -> Unit) {}
+    fun visitInputPorts(visit: (InputPortName, InputPort) -> Unit) {}
+    fun visitOutputPorts(visit: (OutputPortName, OutputPort) -> Unit) {}
 }

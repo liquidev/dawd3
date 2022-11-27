@@ -1,20 +1,22 @@
 package net.liquidev.dawd3.audio.devices
 
+import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.Audio
-import net.liquidev.dawd3.audio.device.Device
-import net.liquidev.dawd3.audio.device.InputPort
-import net.liquidev.dawd3.audio.device.OutputPort
-import net.liquidev.dawd3.audio.device.PortName
+import net.liquidev.dawd3.audio.device.*
+import net.minecraft.util.Identifier
 import kotlin.math.sin
 
 private const val twoPi = 2.0f * kotlin.math.PI.toFloat()
 
 class SineOscillatorDevice : Device {
-    object FrequencyCV : PortName()
-    object Output : PortName()
+    companion object : DeviceDescriptor {
+        override val id = Identifier(Mod.id, "sine_oscillator")
+        val frequencyCVPort = InputPortName(id, "frequency_cv")
+        val outputPort = OutputPortName(id, "output")
+    }
 
-    val frequencyCV = InputPort()
-    val output = OutputPort(bufferCount = 1)
+    private val frequencyCV = InputPort()
+    private val output = OutputPort(bufferCount = 1)
 
     private var phase = 0.0f
 
@@ -29,11 +31,11 @@ class SineOscillatorDevice : Device {
         }
     }
 
-    override fun visitInputPorts(visit: (PortName, InputPort) -> Unit) {
-        visit(FrequencyCV, frequencyCV)
+    override fun visitInputPorts(visit: (InputPortName, InputPort) -> Unit) {
+        visit(frequencyCVPort, frequencyCV)
     }
 
-    override fun visitOutputPorts(visit: (PortName, OutputPort) -> Unit) {
-        visit(Output, output)
+    override fun visitOutputPorts(visit: (OutputPortName, OutputPort) -> Unit) {
+        visit(outputPort, output)
     }
 }

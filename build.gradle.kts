@@ -55,6 +55,8 @@ loom {
             runDir("build/datagen")
         }
     }
+
+    accessWidenerPath.set(file("src/main/resources/dawd3.accesswidener"))
 }
 
 sourceSets.named(mainSourceSet.name) {

@@ -11,19 +11,19 @@ class MixGenerator : AudioGenerator() {
         val logger = Mod.logger<MixGenerator>()
     }
 
-    private val taskQueue = TaskQueue()
+    private val taskQueue = TaskQueue<Unit, Unit>()
     private val channels = arrayListOf<WeakReference<Channel<AudioGenerator>>>()
 
     fun <T : AudioGenerator> createChannel(generator: T): Channel<T> {
         val channel = Channel(taskQueue, generator)
         val weak = WeakReference(channel as Channel<AudioGenerator>)
-        taskQueue.execute { channels.add(weak) }
+        taskQueue.enqueue { channels.add(weak) }
         return channel
     }
 
     override fun generate(output: FloatArray, sampleCount: Int, channelCount: Int) {
         // Flush task queue as soon as possible to reduce latency.
-        taskQueue.flush()
+        taskQueue.flush(Unit)
         reapStoppedChannels()
 
         for (i in 0 until sampleCount) {
@@ -61,7 +61,7 @@ class MixGenerator : AudioGenerator() {
     }
 
     class Channel<out T : AudioGenerator>(
-        private val taskQueue: TaskQueue,
+        private val taskQueue: TaskQueue<Unit, Unit>,
         val generator: T,
     ) {
         private companion object {
@@ -75,7 +75,7 @@ class MixGenerator : AudioGenerator() {
 
         /** Shuts down the channel on the next audio generation request. */
         fun stop() {
-            taskQueue.execute { playing = false }
+            taskQueue.enqueue { playing = false }
         }
 
         fun finalize() {

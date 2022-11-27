@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.block.Blocks
 import net.liquidev.dawd3.datagen.device.DeviceBlockModel
+import net.liquidev.dawd3.item.BasicItem
+import net.liquidev.dawd3.item.Items
 import net.minecraft.data.client.*
 import net.minecraft.util.Identifier
 import java.util.*
@@ -19,7 +21,9 @@ class ModelDatagen(generator: FabricDataGenerator) : FabricModelProvider(generat
 
         for ((id, deviceBlock) in Blocks.deviceBlocks) {
             val modelId = Identifier(Mod.id, "block/${id.path}")
-            generator.modelCollector.accept(modelId) { DeviceBlockModel.generate(id, deviceBlock) }
+            generator.modelCollector.accept(modelId) {
+                DeviceBlockModel.generate(deviceBlock)
+            }
             generator.blockStateCollector.accept(horizontallyRotatableBlockState(id, deviceBlock))
         }
     }
@@ -36,14 +40,21 @@ class ModelDatagen(generator: FabricDataGenerator) : FabricModelProvider(generat
             .coordinate(BlockStateModelGenerator.createNorthDefaultHorizontalRotationStates())
     }
 
-
     override fun generateItemModels(generator: ItemModelGenerator) {
-        logger.info("generating item models")
+        logger.info("generating block item models")
         for ((id, deviceBlock) in Blocks.deviceBlocks) {
             generator.register(
                 deviceBlock.item.item.item,
                 Model(Optional.of(Identifier(Mod.id, "block/${id.path}")), Optional.empty())
             )
+        }
+
+        logger.info("generating other item models")
+        for (registered in Items.registry.registered) {
+            val item = registered.item.item
+            if (item is BasicItem) {
+                generator.register(registered.item.item, Models.GENERATED)
+            }
         }
     }
 }

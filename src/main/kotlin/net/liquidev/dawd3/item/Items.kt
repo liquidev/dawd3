@@ -36,13 +36,32 @@ object Items {
     )
 
     // Tools
-    val patchCable =
-        addItem("patch_cable", PatchCable(FabricItemSettings().group(ItemGroup.REDSTONE)))
+    private fun coloredPatchCable(name: String, color: Byte) =
+        addItem(name, PatchCableItem(FabricItemSettings().group(ItemGroup.REDSTONE), color))
+
+    val patchCables = arrayOf(
+        coloredPatchCable("white_patch_cable", color = 0),
+        coloredPatchCable("orange_patch_cable", color = 1),
+        coloredPatchCable("magenta_patch_cable", color = 2),
+        coloredPatchCable("light_blue_patch_cable", color = 3),
+        coloredPatchCable("yellow_patch_cable", color = 4),
+        coloredPatchCable("lime_patch_cable", color = 5),
+        coloredPatchCable("pink_patch_cable", color = 6),
+        coloredPatchCable("gray_patch_cable", color = 7),
+        coloredPatchCable("light_gray_patch_cable", color = 8),
+        coloredPatchCable("cyan_patch_cable", color = 9),
+        coloredPatchCable("purple_patch_cable", color = 10),
+        coloredPatchCable("blue_patch_cable", color = 11),
+        coloredPatchCable("brown_patch_cable", color = 12),
+        coloredPatchCable("green_patch_cable", color = 13),
+        coloredPatchCable("red_patch_cable", color = 14),
+        coloredPatchCable("black_patch_cable", color = 15),
+    )
 
     fun addItem(name: Identifier, item: Item): D3Registry.Registered<RegisteredItem> =
         registry.add(name, RegisteredItem(item))
 
-    fun addItem(name: String, item: Item) =
+    private fun addItem(name: String, item: Item) =
         addItem(Identifier(Mod.id, name), item)
 
     data class RegisteredItem(

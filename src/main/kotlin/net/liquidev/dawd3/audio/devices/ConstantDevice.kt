@@ -1,11 +1,17 @@
 package net.liquidev.dawd3.audio.devices
 
+import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.Device
+import net.liquidev.dawd3.audio.device.DeviceDescriptor
 import net.liquidev.dawd3.audio.device.OutputPort
-import net.liquidev.dawd3.audio.device.PortName
+import net.liquidev.dawd3.audio.device.OutputPortName
+import net.minecraft.util.Identifier
 
 class ConstantDevice(var value: Float) : Device {
-    object Output : PortName()
+    companion object : DeviceDescriptor {
+        override val id = Identifier(Mod.id, "constant")
+        val outputPort = OutputPortName(id, "output")
+    }
 
     val output = OutputPort(bufferCount = 1)
 
@@ -16,7 +22,7 @@ class ConstantDevice(var value: Float) : Device {
         }
     }
 
-    override fun visitOutputPorts(visit: (PortName, OutputPort) -> Unit) {
-        visit(Output, output)
+    override fun visitOutputPorts(visit: (OutputPortName, OutputPort) -> Unit) {
+        visit(outputPort, output)
     }
 }

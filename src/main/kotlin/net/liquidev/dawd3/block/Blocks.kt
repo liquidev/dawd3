@@ -1,14 +1,21 @@
 package net.liquidev.dawd3.block
 
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
+import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.liquidev.dawd3.D3Registry
+import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.block.device.AnyDeviceBlockDescriptor
 import net.liquidev.dawd3.block.device.DeviceBlock
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
+import net.liquidev.dawd3.block.device.DeviceBlockEntityRenderer
+import net.liquidev.dawd3.block.devices.FaderBlockDescriptor
+import net.liquidev.dawd3.block.devices.SineOscillatorBlockDescriptor
 import net.liquidev.dawd3.block.devices.SpeakerBlockDescriptor
 import net.liquidev.dawd3.item.Items
 import net.minecraft.block.Block
+import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
 import net.minecraft.util.Identifier
@@ -43,8 +50,27 @@ object Blocks {
         return registeredDeviceBlock
     }
 
+    // To not have to mess with rendering the vertices ourselves we just use a baked model that's
+    // represented as a block.
+    val patchCablePlug = Registry.register(
+        Registry.BLOCK,
+        Identifier(Mod.id, "patch_cable_plug"),
+        Block(FabricBlockSettings.of(Material.METAL))
+    )
+
     // Device blocks
     val speaker = registerDeviceBlock(SpeakerBlockDescriptor)
+    val sineOscillator = registerDeviceBlock(SineOscillatorBlockDescriptor)
+    val fader = registerDeviceBlock(FaderBlockDescriptor)
 
     fun initialize() {}
+
+    fun initializeClient() {
+        for ((_, deviceBlock) in deviceBlocks) {
+            BlockEntityRendererRegistry.register(
+                deviceBlock.blockEntity,
+                ::DeviceBlockEntityRenderer
+            )
+        }
+    }
 }

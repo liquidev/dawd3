@@ -38,6 +38,7 @@
   "mixins": [
     "dawd3.mixins.json"
   ],
+  "accessWidener": "dawd3.accesswidener",
   "depends": {
     "fabricloader": ">=${fabricloader}",
     "fabric-api": ">=${fabric_api}",

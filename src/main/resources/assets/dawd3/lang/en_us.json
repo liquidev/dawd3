@@ -1,5 +1,20 @@
 {
   "itemGroup.dawd3.main": "dawd³",
-  "item.dawd3.patch_cable": "Patch Cable",
+  "item.dawd3.white_patch_cable": "White Patch Cable",
+  "item.dawd3.orange_patch_cable": "Orange Patch Cable",
+  "item.dawd3.magenta_patch_cable": "Magenta Patch Cable",
+  "item.dawd3.light_blue_patch_cable": "Light Blue Patch Cable",
+  "item.dawd3.yellow_patch_cable": "Yellow Patch Cable",
+  "item.dawd3.lime_patch_cable": "Lime Patch Cable",
+  "item.dawd3.pink_patch_cable": "Pink Patch Cable",
+  "item.dawd3.gray_patch_cable": "Gray Patch Cable",
+  "item.dawd3.light_gray_patch_cable": "Light Gray Patch Cable",
+  "item.dawd3.cyan_patch_cable": "Cyan Patch Cable",
+  "item.dawd3.purple_patch_cable": "Purple Patch Cable",
+  "item.dawd3.brown_patch_cable": "Brown Patch Cable",
+  "item.dawd3.blue_patch_cable": "Blue Patch Cable",
+  "item.dawd3.green_patch_cable": "Green Patch Cable",
+  "item.dawd3.red_patch_cable": "Red Patch Cable",
+  "item.dawd3.black_patch_cable": "Black Patch Cable",
   "block.dawd3.speaker": "Speaker"
 }

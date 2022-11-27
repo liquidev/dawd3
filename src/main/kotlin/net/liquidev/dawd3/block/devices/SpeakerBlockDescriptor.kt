@@ -22,9 +22,9 @@ object SpeakerBlockDescriptor : DeviceBlockDescriptor<SpeakerBlockDescriptor.Cli
         .hardness(2.0f).resistance(6.0f)
         .sounds(BlockSoundGroup.WOOD)!!
 
-    override val portLayout = arrayOf(
-        PhysicalPort(TerminalDevice.Input, Vec2f(0.5f, 0.5f), PhysicalPort.Side.Back)
-    )
+    override val portLayout = PhysicalPort.layout {
+        port(TerminalDevice.inputPort, position = Vec2f(0.5f, 0.75f), side = PhysicalPort.Side.Back)
+    }
 
     class ClientState : DeviceBlockDescriptor.ClientState {
         internal val channel: MixGenerator.Channel<DeviceGraphGenerator>
@@ -33,15 +33,12 @@ object SpeakerBlockDescriptor : DeviceBlockDescriptor<SpeakerBlockDescriptor.Cli
         init {
             val generator = DeviceGraphGenerator()
             channel = Audio.mixer.createChannel(generator)
-
             val terminal = generator.terminalDevice
             logicalDevice = terminal
-
-            generator.rebuildSim()
         }
     }
 
-    override fun onClientLoad(world: ClientWorld): ClientState = ClientState()
+    override fun onClientLoad(world: ClientWorld) = ClientState()
 
     override fun onClientUnload(state: ClientState, world: ClientWorld) {
         state.channel.stop()

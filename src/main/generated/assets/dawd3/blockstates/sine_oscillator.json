@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "dawd3:block/sine_oscillator",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "dawd3:block/sine_oscillator"
+    },
+    "facing=south": {
+      "model": "dawd3:block/sine_oscillator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "dawd3:block/sine_oscillator",
+      "y": 270
+    }
+  }
+}

@@ -5,11 +5,11 @@
       "faces": {
         "down": {
           "cullface": "down",
-          "texture": "#side"
+          "texture": "#bottom"
         },
         "east": {
           "cullface": "east",
-          "texture": "#side"
+          "texture": "#right"
         },
         "north": {
           "cullface": "north",
@@ -17,15 +17,15 @@
         },
         "south": {
           "cullface": "south",
-          "texture": "#side"
+          "texture": "#back"
         },
         "up": {
           "cullface": "up",
-          "texture": "#side"
+          "texture": "#top"
         },
         "west": {
           "cullface": "west",
-          "texture": "#side"
+          "texture": "#left"
         }
       },
       "from": [
@@ -53,21 +53,25 @@
         }
       },
       "from": [
-        6.5,
-        6.5,
+        6.0,
+        3.0,
         15.99
       ],
       "to": [
-        9.5,
-        9.5,
+        10.0,
+        7.0,
         16.01
       ]
     }
   ],
   "textures": {
+    "back": "dawd3:block/speaker_side",
+    "bottom": "dawd3:block/speaker_side",
     "front": "dawd3:block/speaker_front",
-    "particle": "#side",
+    "left": "dawd3:block/speaker_side",
+    "particle": "dawd3:block/speaker_side",
     "port": "dawd3:device/port",
-    "side": "dawd3:block/speaker_side"
+    "right": "dawd3:block/speaker_side",
+    "top": "dawd3:block/speaker_side"
   }
 }

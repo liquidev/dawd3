@@ -4,7 +4,7 @@ import net.minecraft.util.math.Vec2f
 import net.minecraft.util.math.Vec3f
 
 /** 2x2 matrix. */
-data class Affine2x2(
+data class Affine2x2f(
     val xx: Float,
     val xy: Float,
     val yx: Float,
