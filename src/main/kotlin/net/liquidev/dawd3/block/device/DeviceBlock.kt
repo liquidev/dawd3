@@ -51,7 +51,7 @@ class DeviceBlock(private val descriptor: AnyDeviceBlockDescriptor) :
         newState: BlockState,
         moved: Boolean,
     ) {
-        PatchCableItem.onBlockDestroyed(position)
+        PatchCableItem.removeAllConnectionsAtBlock(position)
 
         @Suppress("DEPRECATION")
         super.onStateReplaced(state, world, position, newState, moved)

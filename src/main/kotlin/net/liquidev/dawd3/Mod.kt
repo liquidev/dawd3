@@ -9,6 +9,7 @@ import net.liquidev.dawd3.block.Blocks
 import net.liquidev.dawd3.block.entity.registerClientBlockEntityEvents
 import net.liquidev.dawd3.item.Items
 import net.liquidev.dawd3.net.Packets
+import net.liquidev.dawd3.render.Textures
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -27,7 +28,7 @@ object Mod : ModInitializer, ClientModInitializer {
     override fun onInitializeClient() {
         logger.info("booting up sound engine")
         D3r.load()
-        Audio.forceInitializationNow()
+        Audio.initializeClient()
 
         ClientLifecycleEvents.CLIENT_STOPPING.register {
             logger.info("shutting down sound engine")
@@ -36,6 +37,7 @@ object Mod : ModInitializer, ClientModInitializer {
         }
 
         registerClientBlockEntityEvents()
+        Textures.initializeClient()
         Blocks.initializeClient()
         Packets.registerClientReceivers()
     }

@@ -25,7 +25,6 @@ class DeviceInstance(val state: Device) {
 
     fun process(sampleCount: Int, channels: Int, processingState: ProcessingState) {
         if (this !in processingState.processedDevices) {
-            println("processing $this")
             processingState.processedDevices.add(this)
             for ((_, port) in inputPortsByName) {
                 port.connectedOutput?.owningDevice?.process(sampleCount, channels, processingState)

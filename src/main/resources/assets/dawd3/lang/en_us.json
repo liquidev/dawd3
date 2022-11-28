@@ -16,5 +16,7 @@
   "item.dawd3.green_patch_cable": "Green Patch Cable",
   "item.dawd3.red_patch_cable": "Red Patch Cable",
   "item.dawd3.black_patch_cable": "Black Patch Cable",
-  "block.dawd3.speaker": "Speaker"
+  "block.dawd3.speaker": "Speaker",
+  "block.dawd3.sine_oscillator": "Sine Oscillator",
+  "block.dawd3.fader": "Fader"
 }

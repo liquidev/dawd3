@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.PortName
 import net.liquidev.dawd3.item.PatchCableItem
-import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -47,13 +47,14 @@ class StartConnectingPorts(val blockPosition: BlockPos, val portName: String, va
         return buffer
     }
 
-    private fun handleForPlayer(player: PlayerEntity) {
+    private fun handleForPlayer(player: ClientPlayerEntity) {
         val portName = PortName.fromString(portName)
         if (portName == null) {
             logger.warn("invalid port name ${this.portName}")
             return
         }
 
+        println("[PLAYER] Started connecting ports $player")
         PatchCableItem.startConnecting(
             player,
             PatchCableItem.OngoingConnection(blockPosition, portName, color)

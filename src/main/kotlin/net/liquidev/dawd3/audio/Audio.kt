@@ -30,7 +30,10 @@ object Audio {
         D3r.startPlayback(outputStreamId)
     }
 
-    fun forceInitializationNow() {}
+    fun initializeClient() {
+        // Stubbed out; this is called explicitly to force the otherwise lazy initialization
+        // of Audio.
+    }
 
     fun deinitialize() {
         D3r.closeOutputStream(outputStreamId)

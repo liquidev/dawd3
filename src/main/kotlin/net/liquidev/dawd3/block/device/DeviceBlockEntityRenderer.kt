@@ -42,6 +42,8 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
         )
         val renderLayerFactory = Function<Identifier, RenderLayer> { renderLayer }
 
+
+        const val cableProtrusionAmount = 0.69f // nice
         const val cableThickness = 0.03f
         const val cableSegmentCount = 6
         const val cableSag = 0.2f
@@ -82,6 +84,7 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
             vertexConsumers,
             overlay
         )
+        renderCables(world, blockState, blockEntity, matrixStack, vertexConsumers, tickDelta)
     }
 
     private fun rotateToFaceFront(
@@ -107,7 +110,7 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
 
         matrixStack.push()
         rotateToFaceFront(blockState, matrixStack)
-        for ((_, connection) in PatchCableItem.ongoingConnections) {
+        for ((_, connection) in PatchCableItem.ongoingConnectionsServer) {
             if (connection.blockPosition == blockEntity.pos) {
                 val port = blockEntity.descriptor.portLayout[connection.portName]
                 if (port != null) {
@@ -157,6 +160,42 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
                 matrixStack.pop()
             }
         }
+    }
+
+    private fun renderCables(
+        world: World,
+        blockState: BlockState,
+        blockEntity: DeviceBlockEntity,
+        matrixStack: MatrixStack,
+        vertexConsumers: VertexConsumerProvider,
+        tickDelta: Float,
+    ) {
+        val facing = HorizontalDirection.fromDirection(blockState[Properties.HORIZONTAL_FACING])!!
+
+        //        println(PatchCableItem.ongoingConnections)
+        for ((player, connection) in PatchCableItem.ongoingConnectionsClient) {
+            if (connection.blockPosition == blockEntity.pos) {
+                val port = blockEntity.descriptor.portLayout[connection.portName]
+                if (port != null) {
+                    val worldFrom = blockEntity.pos.toVec3d()
+                    val forward = player.getRotationVec(tickDelta)
+                    val playerPosition =
+                        player.getCameraPosVec(tickDelta) + forward + Vec3d(0.0, -0.1, 0.0)
+                    val delta = (playerPosition - worldFrom).toVec3f()
+                    val start = port.blockCablePosition(facing, cableProtrusionAmount)
+                    renderCable(
+                        world,
+                        matrixStack,
+                        vertexConsumers,
+                        worldFrom,
+                        start,
+                        delta,
+                        connection.color.toFloat(),
+                    )
+                }
+            }
+        }
+
 
         for ((inputPortName, connection) in blockEntity.inputConnections) {
             val startAbsolute = blockEntity.pos.toVec3d()
@@ -173,9 +212,8 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
                 world.getBlockEntity(connection.blockPosition) as DeviceBlockEntity
             val outputPort = outputBlockEntity.descriptor.portLayout[connection.outputPortName]!!
 
-            val protrusionAmount = 0.69f // nice
-            val start = inputPort.blockCablePosition(facing, protrusionAmount)
-            val end = outputPort.blockCablePosition(outputBlockFacing, protrusionAmount)
+            val start = inputPort.blockCablePosition(facing, cableProtrusionAmount)
+            val end = outputPort.blockCablePosition(outputBlockFacing, cableProtrusionAmount)
             val delta = (endAbsolute - startAbsolute).toVec3f() + end
 
             renderCable(

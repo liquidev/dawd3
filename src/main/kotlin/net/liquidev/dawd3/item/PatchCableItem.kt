@@ -8,8 +8,10 @@ import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.block.device.PhysicalPort
 import net.liquidev.dawd3.common.*
 import net.liquidev.dawd3.datagen.device.DeviceBlockModel
+import net.liquidev.dawd3.events.PlayerEvents
 import net.liquidev.dawd3.net.ConnectPorts
 import net.liquidev.dawd3.net.StartConnectingPorts
+import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.server.network.ServerPlayerEntity
@@ -64,7 +66,7 @@ class PatchCableItem(settings: Settings, val color: Byte) : BasicItem(settings) 
             return
         }
 
-        val ongoingConnection = ongoingConnections[player]
+        val ongoingConnection = ongoingConnectionsServer[player]
         if (ongoingConnection == null) {
             startConnecting(player, OngoingConnection(context.blockPos, portName, color))
             ServerPlayNetworking.send(
@@ -124,18 +126,33 @@ class PatchCableItem(settings: Settings, val color: Byte) : BasicItem(settings) 
     companion object {
         private var logger = Mod.logger<PatchCableItem>()
 
-        internal val ongoingConnections = hashMapOf<PlayerEntity, OngoingConnection>()
+        internal val ongoingConnectionsServer = hashMapOf<ServerPlayerEntity, OngoingConnection>()
+        internal val ongoingConnectionsClient = hashMapOf<ClientPlayerEntity, OngoingConnection>()
 
         private fun clearOngoingConnection(player: PlayerEntity) {
-            ongoingConnections.remove(player)
+            ongoingConnectionsServer.remove(player)
+            ongoingConnectionsClient.remove(player)
         }
 
-        internal fun onBlockDestroyed(blockPosition: BlockPos) {
-            ongoingConnections.values.removeAll { it.blockPosition == blockPosition }
+        internal fun removeAllConnectionsAtBlock(blockPosition: BlockPos) {
+            ongoingConnectionsServer.values.removeAll { it.blockPosition == blockPosition }
+            ongoingConnectionsClient.values.removeAll { it.blockPosition == blockPosition }
         }
 
         fun startConnecting(player: PlayerEntity, connection: OngoingConnection) {
-            ongoingConnections[player] = connection
+            when (player) {
+                is ServerPlayerEntity -> ongoingConnectionsServer[player] = connection
+                is ClientPlayerEntity -> ongoingConnectionsClient[player] = connection
+                else -> {
+                    logger.warn("player of unexpected class found")
+                }
+            }
+        }
+
+        init {
+            PlayerEvents.ITEM_SWITCHED.register { player ->
+                clearOngoingConnection(player)
+            }
         }
     }
 }
