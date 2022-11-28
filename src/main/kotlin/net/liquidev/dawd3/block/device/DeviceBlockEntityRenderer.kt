@@ -172,7 +172,6 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
     ) {
         val facing = HorizontalDirection.fromDirection(blockState[Properties.HORIZONTAL_FACING])!!
 
-        //        println(PatchCableItem.ongoingConnections)
         for ((player, connection) in PatchCableItem.ongoingConnectionsClient) {
             if (connection.blockPosition == blockEntity.pos) {
                 val port = blockEntity.descriptor.portLayout[connection.portName]
@@ -195,7 +194,6 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
                 }
             }
         }
-
 
         for ((inputPortName, connection) in blockEntity.inputConnections) {
             val startAbsolute = blockEntity.pos.toVec3d()
