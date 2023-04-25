@@ -37,52 +37,111 @@ class DeviceBlockEntity(
 
     internal val inputConnections = hashMapOf<InputPortName, InputConnection>()
 
+    /**
+     * This field is mostly used for tracing back connections from outputs of this block to inputs
+     * of another block, to know which blocks' connections to sever when this one's destroyed.
+     */
+    internal val outputConnections = hashMapOf<OutputPortName, BlockPos>()
+
+    /** NBT compound keys. */
+    private object Nbt {
+        const val inputConnections = "inputConnections"
+
+        object InputConnection {
+            const val input = "input"
+            const val output = "output"
+            const val position = "position"
+            const val color = "color"
+        }
+
+        const val outputConnections = "outputConnections"
+
+        object OutputConnection {
+            const val port = "port"
+            const val block = "block"
+        }
+    }
+
     override fun readNbt(nbt: NbtCompound) {
         super.readNbt(nbt)
 
-        val nbtConnections = nbt.getList("connections", NbtElement.COMPOUND_TYPE.toInt())
+        val inputConnectionsNbt =
+            nbt.getList(Nbt.inputConnections, NbtElement.COMPOUND_TYPE.toInt())
+        for (i in 0 until inputConnectionsNbt.size) {
+            val connectionNbt = inputConnectionsNbt.getCompound(i)
 
-        for (i in 0 until nbtConnections.size) {
-            val connectionNbt = nbtConnections.getCompound(i)
-
-            val outputString = connectionNbt.getString("output")
+            val outputString = connectionNbt.getString(Nbt.InputConnection.output)
             val output = PortName.fromString(outputString) ?: continue
             if (output !is OutputPortName) {
-                logger.error("NBT declares 'output' field that refers to an input port")
+                logger.error("NBT declares 'inputConnections.output' field that refers to an input port")
                 continue
             }
 
-            val inputString = connectionNbt.getString("input")
+            val inputString = connectionNbt.getString(Nbt.InputConnection.input)
             val input = PortName.fromString(inputString) ?: continue
             if (input !is InputPortName) {
-                logger.error("NBT declares 'input' field that refers to an output port")
+                logger.error("NBT declares 'inputConnections.input' field that refers to an output port")
                 continue
             }
 
-            val blockPosition = NbtHelper.toBlockPos(connectionNbt.getCompound("position"))
-            val color = connectionNbt.getByte("color")
+            val blockPosition =
+                NbtHelper.toBlockPos(connectionNbt.getCompound(Nbt.InputConnection.position))
+            val color = connectionNbt.getByte(Nbt.InputConnection.color)
 
             inputConnections[input] = InputConnection(blockPosition, outputPortName = output, color)
+        }
+
+        val outputConnectionsNbt =
+            nbt.getList(Nbt.outputConnections, NbtElement.COMPOUND_TYPE.toInt())
+        for (i in 0 until outputConnectionsNbt.size) {
+            val connectionNbt = outputConnectionsNbt.getCompound(i)
+
+            val portString = connectionNbt.getString(Nbt.OutputConnection.port)
+            val port = PortName.fromString(portString) ?: continue
+            if (port !is OutputPortName) {
+                logger.error("NBT declares 'outputConnections.port' field that refers to an input port")
+                continue
+            }
+            val blockPosition =
+                NbtHelper.toBlockPos(connectionNbt.getCompound(Nbt.OutputConnection.block))
+
+            outputConnections[port] = blockPosition
         }
     }
 
     override fun writeNbt(nbt: NbtCompound) {
         super.writeNbt(nbt)
 
-        val connectionsNbt = NbtList()
+        val inputConnectionsNbt = NbtList()
         for ((inputPortName, connection) in inputConnections) {
             val connectionNbt = NbtCompound()
-            connectionNbt.putString("output", connection.outputPortName.toString())
-            connectionNbt.putString("input", inputPortName.toString())
-            connectionNbt.put("position", NbtHelper.fromBlockPos(connection.blockPosition))
-            connectionNbt.putByte("color", connection.color)
-            connectionsNbt.add(connectionNbt)
+            connectionNbt.putString(
+                Nbt.InputConnection.output,
+                connection.outputPortName.toString()
+            )
+            connectionNbt.putString(Nbt.InputConnection.input, inputPortName.toString())
+            connectionNbt.put(
+                Nbt.InputConnection.position,
+                NbtHelper.fromBlockPos(connection.blockPosition)
+            )
+            connectionNbt.putByte(Nbt.InputConnection.color, connection.color)
+            inputConnectionsNbt.add(connectionNbt)
         }
-        nbt.put("connections", connectionsNbt)
+        nbt.put(Nbt.inputConnections, inputConnectionsNbt)
+
+        val outputConnectionsNbt = NbtList()
+        for ((outputPortName, blockPosition) in outputConnections) {
+            val connectionNbt = NbtCompound()
+            connectionNbt.putString(Nbt.OutputConnection.port, outputPortName.toString())
+            connectionNbt.put(Nbt.OutputConnection.block, NbtHelper.fromBlockPos(blockPosition))
+            outputConnectionsNbt.add(connectionNbt)
+        }
+        nbt.put(Nbt.outputConnections, outputConnectionsNbt)
     }
 
     override fun onClientLoad(world: ClientWorld) {
         clientState = descriptor.onClientLoad(world)
+        WorldDeviceLoading.enqueueDeviceForRebuild(this)
     }
 
     override fun onClientUnload(world: ClientWorld) {
@@ -103,6 +162,11 @@ class DeviceBlockEntity(
                 world.getBlockEntity(it.blockPosition) !is DeviceBlockEntity
             }
         }
+    }
+
+    internal fun reapAllConnections() {
+        // TODO: This should be triggered whenever a device block's destroyed and reap all
+        //  existing connections to the device.
     }
 
     companion object {
@@ -131,6 +195,7 @@ class DeviceBlockEntity(
             val inputDevice = inputBlockEntity.clientState?.logicalDevice ?: return
             inputBlockEntity.inputConnections[inputPort] =
                 InputConnection(outputBlockEntity.pos, outputPort, cableColor)
+            outputBlockEntity.outputConnections[outputPort] = inputBlockEntity.pos
             Devices.makeConnection(
                 outputDevice,
                 outputPort.resolveInstance(),
@@ -154,6 +219,7 @@ class DeviceBlockEntity(
             ) ?: throw PortDirectionException("connected ports must be of opposing directions")
             inputBlockEntity.inputConnections[inputPort] =
                 InputConnection(outputBlockEntity.pos, outputPort, cableColor)
+            outputBlockEntity.outputConnections[outputPort] = inputBlockEntity.pos
             outputBlockEntity.markDirty()
         }
     }

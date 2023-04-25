@@ -140,24 +140,26 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
 
         for ((_, connection) in blockEntity.inputConnections) {
             val outputBlockEntity =
-                world.getBlockEntity(connection.blockPosition) as DeviceBlockEntity
-            val outputBlockState = world.getBlockState(connection.blockPosition)
-            val outputPort = outputBlockEntity.descriptor.portLayout[connection.outputPortName]
-            if (outputPort != null) {
-                val delta = (outputBlockEntity.pos - blockEntity.pos).toVec3d()
-                matrixStack.push()
-                matrixStack.translate(delta.x, delta.y, delta.z)
-                rotateToFaceFront(outputBlockState, matrixStack)
-                renderPlugInsidePort(
-                    world,
-                    outputBlockEntity,
-                    facing,
-                    outputPort,
-                    matrixStack,
-                    vertexConsumers,
-                    overlay
-                )
-                matrixStack.pop()
+                world.getBlockEntity(connection.blockPosition)
+            if (outputBlockEntity is DeviceBlockEntity) {
+                val outputBlockState = world.getBlockState(connection.blockPosition)
+                val outputPort = outputBlockEntity.descriptor.portLayout[connection.outputPortName]
+                if (outputPort != null) {
+                    val delta = (outputBlockEntity.pos - blockEntity.pos).toVec3d()
+                    matrixStack.push()
+                    matrixStack.translate(delta.x, delta.y, delta.z)
+                    rotateToFaceFront(outputBlockState, matrixStack)
+                    renderPlugInsidePort(
+                        world,
+                        outputBlockEntity,
+                        facing,
+                        outputPort,
+                        matrixStack,
+                        vertexConsumers,
+                        overlay
+                    )
+                    matrixStack.pop()
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.liquidev.d3r.D3r
 import net.liquidev.dawd3.audio.Audio
 import net.liquidev.dawd3.block.Blocks
+import net.liquidev.dawd3.block.device.WorldDeviceLoading
 import net.liquidev.dawd3.block.entity.registerClientBlockEntityEvents
 import net.liquidev.dawd3.item.Items
 import net.liquidev.dawd3.net.Packets
@@ -37,6 +38,7 @@ object Mod : ModInitializer, ClientModInitializer {
         }
 
         registerClientBlockEntityEvents()
+        WorldDeviceLoading.registerClientTickEvent()
         Textures.initializeClient()
         Blocks.initializeClient()
         Packets.registerClientReceivers()
