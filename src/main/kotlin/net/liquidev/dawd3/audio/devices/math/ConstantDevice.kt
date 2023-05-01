@@ -1,4 +1,4 @@
-package net.liquidev.dawd3.audio.devices
+package net.liquidev.dawd3.audio.devices.math
 
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.*

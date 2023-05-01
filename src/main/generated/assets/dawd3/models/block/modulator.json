@@ -46,30 +46,6 @@
           "cullface": "north",
           "texture": "#port",
           "uv": [
-            4.0,
-            0.0,
-            8.0,
-            4.0
-          ]
-        }
-      },
-      "from": [
-        3.0,
-        6.0,
-        -0.01
-      ],
-      "to": [
-        7.0,
-        10.0,
-        0.01
-      ]
-    },
-    {
-      "faces": {
-        "north": {
-          "cullface": "north",
-          "texture": "#port",
-          "uv": [
             0.0,
             0.0,
             4.0,
@@ -87,16 +63,40 @@
         10.0,
         0.01
       ]
+    },
+    {
+      "faces": {
+        "north": {
+          "cullface": "north",
+          "texture": "#port",
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            4.0
+          ]
+        }
+      },
+      "from": [
+        3.0,
+        6.0,
+        -0.01
+      ],
+      "to": [
+        7.0,
+        10.0,
+        0.01
+      ]
     }
   ],
   "textures": {
-    "back": "dawd3:block/triangle_oscillator_side",
-    "bottom": "dawd3:block/triangle_oscillator_side",
-    "front": "dawd3:block/triangle_oscillator_front",
-    "left": "dawd3:block/triangle_oscillator_side",
-    "particle": "dawd3:block/triangle_oscillator_side",
+    "back": "dawd3:block/modulator_side",
+    "bottom": "dawd3:block/modulator_side",
+    "front": "dawd3:block/modulator_front",
+    "left": "dawd3:block/modulator_side",
+    "particle": "dawd3:block/modulator_side",
     "port": "dawd3:device/port",
-    "right": "dawd3:block/triangle_oscillator_side",
-    "top": "dawd3:block/triangle_oscillator_side"
+    "right": "dawd3:block/modulator_side",
+    "top": "dawd3:block/modulator_side"
   }
 }
