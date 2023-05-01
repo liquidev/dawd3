@@ -1,4 +1,4 @@
-package net.liquidev.dawd3.audio.devices
+package net.liquidev.dawd3.audio.devices.oscillator
 
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.*
@@ -17,7 +17,7 @@ class SineOscillatorDevice : Device<NoControls> {
     private val phase = InputPort()
     private val output = OutputPort(bufferCount = 1)
 
-    override fun process(sampleCount: Int, channels: Int, controls: NoControls) {
+    override fun process(sampleCount: Int, controls: NoControls) {
         val phase = phase.getConnectedOutputBuffer(0, sampleCount)
         val outputBuffer = output.buffers[0].getOrReallocate(sampleCount)
         for (i in 0 until sampleCount) {

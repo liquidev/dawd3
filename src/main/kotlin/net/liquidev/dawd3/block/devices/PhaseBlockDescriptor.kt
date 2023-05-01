@@ -3,7 +3,7 @@ package net.liquidev.dawd3.block.devices
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.DeviceInstance
 import net.liquidev.dawd3.audio.device.NoControls
-import net.liquidev.dawd3.audio.devices.PhaseDevice
+import net.liquidev.dawd3.audio.devices.oscillator.PhaseDevice
 import net.liquidev.dawd3.block.device.DeviceBlockDescriptor
 import net.liquidev.dawd3.block.device.PhysicalPort
 import net.liquidev.dawd3.block.device.descriptor.FaceTextures

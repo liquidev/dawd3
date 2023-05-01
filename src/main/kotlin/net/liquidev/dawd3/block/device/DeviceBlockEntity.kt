@@ -236,12 +236,16 @@ class DeviceBlockEntity(
             inputBlockEntity.inputConnections[inputPort] =
                 InputConnection(outputBlockEntity.pos, outputPort, cableColor)
             outputBlockEntity.outputConnections[outputPort] = inputBlockEntity.pos
-            Devices.makeConnection(
-                outputDevice,
-                outputPort.resolveInstance(),
-                inputDevice,
-                inputPort
-            )
+            try {
+                Devices.makeConnection(
+                    outputDevice,
+                    outputPort.resolveInstance(),
+                    inputDevice,
+                    inputPort
+                )
+            } catch (noSuchPort: NoSuchPortException) {
+                logger.error("NoSuchPortException caught: $noSuchPort")
+            }
         }
 
         fun connectPhysicalDevices(

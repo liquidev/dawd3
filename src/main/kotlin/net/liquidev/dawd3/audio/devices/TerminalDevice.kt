@@ -12,7 +12,7 @@ class TerminalDevice : Device<NoControls> {
 
     val input = InputPort()
 
-    override fun process(sampleCount: Int, channels: Int, controls: NoControls) {
+    override fun process(sampleCount: Int, controls: NoControls) {
         // Terminals don't do any audio processing.
         // The output port connected to `input` is instead used by terminal block entities like
         // speakers.

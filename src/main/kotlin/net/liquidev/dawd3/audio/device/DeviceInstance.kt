@@ -29,7 +29,7 @@ class DeviceInstance private constructor(val state: Device<ControlSet>, val cont
             for ((_, port) in inputPortsByName) {
                 port.connectedOutput?.owningDevice?.process(sampleCount, channels, processingState)
             }
-            state.process(sampleCount, channels, controls)
+            state.process(sampleCount, controls)
         }
     }
 

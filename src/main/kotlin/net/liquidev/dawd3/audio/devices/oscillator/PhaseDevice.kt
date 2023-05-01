@@ -1,4 +1,4 @@
-package net.liquidev.dawd3.audio.devices
+package net.liquidev.dawd3.audio.devices.oscillator
 
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.Audio
@@ -20,7 +20,7 @@ class PhaseDevice : Device<NoControls> {
     private val frequencyBuffer = AudioBuffer()
     private var phase = 0.0f
 
-    override fun process(sampleCount: Int, channels: Int, controls: NoControls) {
+    override fun process(sampleCount: Int, controls: NoControls) {
         val voctBuffer = frequencyCV.getConnectedOutputBuffer(0, sampleCount)
         val frequencyBuffer = frequencyBuffer.getOrReallocate(sampleCount)
         for (i in 0 until sampleCount) {

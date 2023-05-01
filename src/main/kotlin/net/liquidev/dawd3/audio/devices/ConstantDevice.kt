@@ -21,7 +21,7 @@ class ConstantDevice : Device<ConstantDevice.Controls> {
 
     val output = OutputPort(bufferCount = 1)
 
-    override fun process(sampleCount: Int, channels: Int, controls: Controls) {
+    override fun process(sampleCount: Int, controls: Controls) {
         val outputBuffer = output.buffers[0].getOrReallocate(sampleCount)
         for (i in 0 until sampleCount) {
             outputBuffer[i] = controls.value.value

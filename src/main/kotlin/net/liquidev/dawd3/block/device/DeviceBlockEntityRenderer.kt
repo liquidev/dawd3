@@ -209,21 +209,24 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
                 HorizontalDirection.fromDirection(outputBlockState[Properties.HORIZONTAL_FACING])!!
             val outputBlockEntity =
                 world.getBlockEntity(connection.blockPosition) as DeviceBlockEntity
-            val outputPort = outputBlockEntity.descriptor.portLayout[connection.outputPortName]!!
+            val outputPort = outputBlockEntity.descriptor.portLayout[connection.outputPortName]
 
-            val start = inputPort.blockCablePosition(facing, cableProtrusionAmount)
-            val end = outputPort.blockCablePosition(outputBlockFacing, cableProtrusionAmount)
-            val delta = (endAbsolute - startAbsolute).toVec3f() + end
+            // The output port can be null if we find a port that doesn't exist on this device.
+            if (outputPort != null) {
+                val start = inputPort.blockCablePosition(facing, cableProtrusionAmount)
+                val end = outputPort.blockCablePosition(outputBlockFacing, cableProtrusionAmount)
+                val delta = (endAbsolute - startAbsolute).toVec3f() + end
 
-            renderCable(
-                world,
-                matrixStack,
-                vertexConsumers,
-                worldFrom = blockEntity.pos.toVec3d(),
-                start,
-                delta,
-                connection.color.toFloat()
-            )
+                renderCable(
+                    world,
+                    matrixStack,
+                    vertexConsumers,
+                    worldFrom = blockEntity.pos.toVec3d(),
+                    start,
+                    delta,
+                    connection.color.toFloat()
+                )
+            }
         }
     }
 
