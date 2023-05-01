@@ -24,6 +24,7 @@ object Mod : ModInitializer, ClientModInitializer {
         logger.info("hello, sound traveler! welcome to the dawd³ experience")
         Blocks.initialize()
         Items.registry.registerAll()
+        Packets.registerServerReceivers()
     }
 
     override fun onInitializeClient() {

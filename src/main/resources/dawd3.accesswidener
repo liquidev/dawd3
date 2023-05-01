@@ -1,5 +1,7 @@
 accessWidener	v1	named
 
+accessible	method	net/minecraft/item/ItemUsageContext	getHitResult	()Lnet/minecraft/util/hit/BlockHitResult;
+
 # The functionality for creating render layers is inaccessible by default for some reason and we need it to create a layer for rendering cables.
 accessible	class	net/minecraft/client/render/RenderLayer$MultiPhaseParameters
 accessible	class	net/minecraft/client/render/RenderLayer$MultiPhase

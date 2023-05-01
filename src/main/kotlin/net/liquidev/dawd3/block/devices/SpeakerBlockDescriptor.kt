@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.Audio
 import net.liquidev.dawd3.audio.device.DeviceInstance
+import net.liquidev.dawd3.audio.device.NoControls
 import net.liquidev.dawd3.audio.devices.TerminalDevice
 import net.liquidev.dawd3.audio.generator.DeviceGraphGenerator
 import net.liquidev.dawd3.audio.generator.MixGenerator
@@ -15,7 +16,7 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec2f
 
-object SpeakerBlockDescriptor : DeviceBlockDescriptor<SpeakerBlockDescriptor.ClientState, Unit> {
+object SpeakerBlockDescriptor : DeviceBlockDescriptor<SpeakerBlockDescriptor.ClientState, NoControls> {
     override val id = Identifier(Mod.id, "speaker")
     override val blockSettings = FabricBlockSettings
         .of(Material.WOOD)
@@ -38,7 +39,9 @@ object SpeakerBlockDescriptor : DeviceBlockDescriptor<SpeakerBlockDescriptor.Cli
         }
     }
 
-    override fun onClientLoad(world: ClientWorld) = ClientState()
+    override fun initControls() = NoControls
+
+    override fun onClientLoad(controls: NoControls, world: ClientWorld) = ClientState()
 
     override fun onClientUnload(state: ClientState, world: ClientWorld) {
         state.channel.stop()

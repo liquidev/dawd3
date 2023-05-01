@@ -42,7 +42,6 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
         )
         val renderLayerFactory = Function<Identifier, RenderLayer> { renderLayer }
 
-
         const val cableProtrusionAmount = 0.69f // nice
         const val cableThickness = 0.03f
         const val cableSegmentCount = 6

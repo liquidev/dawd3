@@ -55,12 +55,8 @@ sealed interface PortName {
             registry[name.id] = name
         }
 
-        fun fromString(name: String): PortName? {
-            return registry[Identifier(name)]
-        }
-
-        internal fun idInDevice(deviceId: Identifier, name: String): Identifier =
-            Identifier(deviceId.namespace, "${deviceId.path}/$name")
+        fun fromString(name: String): PortName? =
+            registry[Identifier(name)]
     }
 }
 
@@ -74,7 +70,7 @@ class InputPortName(override val id: Identifier) : PortName {
     constructor(
         parent: Identifier,
         name: String,
-    ) : this(PortName.idInDevice(parent, name))
+    ) : this(idInDevice(parent, name))
 
     override fun toString(): String = id.toString()
 }
@@ -92,12 +88,12 @@ class OutputPortName private constructor(
     constructor(
         parent: Identifier,
         name: String,
-    ) : this(PortName.idInDevice(parent, name), instanceOf = null)
+    ) : this(idInDevice(parent, name), instanceOf = null)
 
     override fun toString(): String = id.toString()
 
     fun makeInstanced(instanceName: String) =
-        OutputPortName(PortName.idInDevice(id, instanceName), instanceOf = this)
+        OutputPortName(idInDevice(id, instanceName), instanceOf = this)
 
     fun resolveInstance() = instanceOf ?: this
 }

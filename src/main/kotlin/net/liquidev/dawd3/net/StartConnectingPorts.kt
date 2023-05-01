@@ -54,7 +54,6 @@ class StartConnectingPorts(val blockPosition: BlockPos, val portName: String, va
             return
         }
 
-        println("[PLAYER] Started connecting ports $player")
         PatchCableItem.startConnecting(
             player,
             PatchCableItem.OngoingConnection(blockPosition, portName, color)

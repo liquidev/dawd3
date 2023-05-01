@@ -4,6 +4,7 @@ import net.liquidev.d3r.D3r
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.generator.GeneratorWithProcessingState
 import net.liquidev.dawd3.audio.generator.MixGenerator
+import net.liquidev.dawd3.audio.unit.Frequency
 
 /** Audio system and common settings. */
 object Audio {
@@ -13,6 +14,8 @@ object Audio {
     const val sampleRateF = sampleRate.toFloat()
     const val sampleRateFInv = 1.0f / sampleRateF
     private const val bufferSize = 256
+
+    val a4 = Frequency(440f)
 
     private val outputDeviceId: Int
     private val outputStreamId: Int

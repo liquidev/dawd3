@@ -2,19 +2,13 @@ package net.liquidev.dawd3.block.device
 
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.liquidev.dawd3.Mod
-import net.liquidev.dawd3.audio.device.Devices
-import net.liquidev.dawd3.audio.device.InputPortName
-import net.liquidev.dawd3.audio.device.OutputPortName
-import net.liquidev.dawd3.audio.device.PortName
+import net.liquidev.dawd3.audio.device.*
 import net.liquidev.dawd3.block.Blocks
 import net.liquidev.dawd3.block.entity.D3BlockEntity
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.world.ClientWorld
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtElement
-import net.minecraft.nbt.NbtHelper
-import net.minecraft.nbt.NbtList
+import net.minecraft.nbt.*
 import net.minecraft.util.math.BlockPos
 
 private typealias DeviceBlockFactory = FabricBlockEntityTypeBuilder.Factory<DeviceBlockEntity>
@@ -27,7 +21,8 @@ class DeviceBlockEntity(
 ) : D3BlockEntity(type, blockPos, blockState) {
 
     private var clientState: DeviceBlockDescriptor.ClientState? = null
-    private var serverState: Any? = null
+    val controls = descriptor.initControls()
+    val controlMap = ControlMap(controls)
 
     internal data class InputConnection(
         val blockPosition: BlockPos,
@@ -45,6 +40,8 @@ class DeviceBlockEntity(
 
     /** NBT compound keys. */
     private object Nbt {
+        const val controls = "controls"
+
         const val inputConnections = "inputConnections"
 
         object InputConnection {
@@ -64,6 +61,15 @@ class DeviceBlockEntity(
 
     override fun readNbt(nbt: NbtCompound) {
         super.readNbt(nbt)
+
+        val controlsNbt = nbt.getCompound(Nbt.controls)
+        controls.visitControls { controlDescriptor, control ->
+            val controlName = controlDescriptor.name.toString()
+            if (controlName in controlsNbt) {
+                val value = controlsNbt.getFloat(controlName)
+                control.value = value
+            }
+        }
 
         val inputConnectionsNbt =
             nbt.getList(Nbt.inputConnections, NbtElement.COMPOUND_TYPE.toInt())
@@ -112,6 +118,12 @@ class DeviceBlockEntity(
     override fun writeNbt(nbt: NbtCompound) {
         super.writeNbt(nbt)
 
+        val controlsNbt = NbtCompound()
+        controls.visitControls { controlDescriptor, control ->
+            controlsNbt.put(controlDescriptor.name.toString(), NbtFloat.of(control.value))
+        }
+        nbt.put(Nbt.controls, controlsNbt)
+
         val inputConnectionsNbt = NbtList()
         for ((inputPortName, connection) in inputConnections) {
             val connectionNbt = NbtCompound()
@@ -140,7 +152,7 @@ class DeviceBlockEntity(
     }
 
     override fun onClientLoad(world: ClientWorld) {
-        clientState = descriptor.onClientLoad(world)
+        clientState = descriptor.onClientLoad(controls, world)
         WorldDeviceLoading.enqueueDeviceForRebuild(this)
     }
 
@@ -164,9 +176,37 @@ class DeviceBlockEntity(
         }
     }
 
-    internal fun reapAllConnections() {
-        // TODO: This should be triggered whenever a device block's destroyed and reap all
-        //  existing connections to the device.
+    fun severConnectionsInPort(portName: PortName): Boolean {
+        val world = world ?: return false
+
+        val clientState = clientState
+        val severedConnections = if (clientState != null) {
+            val resolvedPortName =
+                if (portName is OutputPortName) portName.resolveInstance() else portName
+            Devices.severAllConnectionsInPort(clientState.logicalDevice, resolvedPortName)
+        } else 0
+
+        when (portName) {
+            is InputPortName -> {
+                val inputConnection = inputConnections.remove(portName)
+                if (inputConnection != null) {
+                    val blockEntity = world.getBlockEntity(inputConnection.blockPosition)
+                    if (blockEntity is DeviceBlockEntity) {
+                        blockEntity.outputConnections.remove(inputConnection.outputPortName)
+                    }
+                }
+            }
+            is OutputPortName -> {
+                val blockPosition = outputConnections.remove(portName)
+                if (blockPosition != null) {
+                    val blockEntity = world.getBlockEntity(blockPosition)
+                    if (blockEntity is DeviceBlockEntity) {
+                        blockEntity.inputConnections.values.removeAll { it.outputPortName == portName }
+                    }
+                }
+            }
+        }
+        return severedConnections != 0
     }
 
     companion object {

@@ -2,17 +2,19 @@ package net.liquidev.dawd3.block.device
 
 import FaceTextures
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.liquidev.dawd3.audio.device.ControlSet
 import net.liquidev.dawd3.audio.device.DeviceInstance
 import net.liquidev.dawd3.common.Cuboids
+import net.liquidev.dawd3.ui.widget.Widget
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Material
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Box
 
-typealias AnyDeviceBlockDescriptor = DeviceBlockDescriptor<DeviceBlockDescriptor.ClientState, Any>
+typealias AnyDeviceBlockDescriptor = DeviceBlockDescriptor<DeviceBlockDescriptor.ClientState, ControlSet>
 
-interface DeviceBlockDescriptor<out CS : DeviceBlockDescriptor.ClientState, out ServerState> {
+interface DeviceBlockDescriptor<out CS : DeviceBlockDescriptor.ClientState, out Controls : ControlSet> {
     val id: Identifier
 
     val blockSettings: AbstractBlock.Settings
@@ -29,11 +31,15 @@ interface DeviceBlockDescriptor<out CS : DeviceBlockDescriptor.ClientState, out 
     val faceTextures: FaceTextures
         get() = FaceTextures.withFrontAndSide { id }
 
-    fun onClientLoad(world: ClientWorld): CS
+    fun initControls(): Controls
+
+    fun onClientLoad(controls: @UnsafeVariance Controls, world: ClientWorld): CS
     fun onClientUnload(state: @UnsafeVariance CS, world: ClientWorld) {}
 
     interface ClientState {
         val logicalDevice: DeviceInstance
     }
+
+    fun openUI(controls: @UnsafeVariance Controls, x: Int, y: Int): Widget? = null
 }
 

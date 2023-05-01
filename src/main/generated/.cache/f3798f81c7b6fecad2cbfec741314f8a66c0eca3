@@ -1,5 +1,6 @@
-// 1.19.2	2022-11-27T14:23:10.976127707	Models
+// 1.19.2	2023-04-29T18:02:19.599832005	Models
 0812a674d14cfc6fbb7c0e2ac1b473bf2afe1965 assets/dawd3/models/item/brown_patch_cable.json
+6e01a1aa07f3a36d7950a1b00d1bc6e9045b9995 assets/dawd3/blockstates/knob.json
 bf0e322e33123cb6873c2da4e8c6ab85688deb4e assets/dawd3/models/item/gray_patch_cable.json
 6a9fb209d82556f5941422a8d047a0ae2af1dc8f assets/dawd3/models/item/sine_oscillator.json
 215b221d48639e96de11914625a770a389d65b81 assets/dawd3/models/item/green_patch_cable.json
@@ -9,8 +10,8 @@ f7b47538f17992177e97e06842c0039ae5096b2b assets/dawd3/blockstates/speaker.json
 9cf2cff42345ec60a944d7399b5047323aa8e88c assets/dawd3/models/item/red_patch_cable.json
 8c6f0307320980a66c70622b0b7c72c8cfe78dc3 assets/dawd3/models/item/light_gray_patch_cable.json
 5ed33e9ec3c70e8cc027eea6425951d51487437f assets/dawd3/models/item/blue_patch_cable.json
-83866bdfd40b759257070558c9ccb942e082914a assets/dawd3/blockstates/fader.json
 a4e8bc89d39021eb8d56ad7735216cb851d67287 assets/dawd3/models/item/light_blue_patch_cable.json
+aa1a1807d2c46f1f25e3d0c507952fefb5b3cd9f assets/dawd3/models/item/knob.json
 0023521ecb90e79515f0fa0088609c70aac9a605 assets/dawd3/models/block/speaker.json
 8aa966337109315240614d5257eb72f959eba5d8 assets/dawd3/models/item/orange_patch_cable.json
 12c4bfd825b2476955afcd3bb23c1f736ce68caa assets/dawd3/models/item/yellow_patch_cable.json
@@ -19,8 +20,7 @@ aab1bce7ec4e7c7dccd3d33d4242de12b63a981d assets/dawd3/models/item/white_patch_ca
 e3c6aacd49a6395f37047d3df31f91a18a411267 assets/dawd3/models/item/speaker.json
 32bb0e6e3bf75b9005602e8fb1042ad5d41286ad assets/dawd3/models/item/lime_patch_cable.json
 956d8f117df95cf62c8cac375cff853df96840d6 assets/dawd3/models/item/pink_patch_cable.json
-71fd99012b4338600f0a11dcadb9a97a6e0a15e5 assets/dawd3/models/block/fader.json
 3b1811bab3ba394ba03b67ac2efc72cb35316dc8 assets/dawd3/blockstates/sine_oscillator.json
 9c18a8292a0c9990cd23bebf5c6191c2114ccc6d assets/dawd3/models/item/black_patch_cable.json
-d300f52d5aa2dcb2ec7d9a0cdb1138104e016d83 assets/dawd3/models/item/fader.json
-0d759623578e206f437f2d9976443a773721a9f3 assets/dawd3/models/block/sine_oscillator.json
+ff4e86bc6228d4ced17fc8df632bd9d3812a51d0 assets/dawd3/models/block/knob.json
+fb1d7e02f0cdd3807d828b0bec299c6533b9de57 assets/dawd3/models/block/sine_oscillator.json

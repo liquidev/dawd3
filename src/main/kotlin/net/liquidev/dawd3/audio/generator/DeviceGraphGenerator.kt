@@ -2,12 +2,13 @@ package net.liquidev.dawd3.audio.generator
 
 import net.liquidev.dawd3.audio.Audio
 import net.liquidev.dawd3.audio.device.DeviceInstance
+import net.liquidev.dawd3.audio.device.NoControls
 import net.liquidev.dawd3.audio.devices.TerminalDevice
 
 /** Audio generator that evaluates a device graph. */
 class DeviceGraphGenerator : AudioGenerator() {
     private val terminalDeviceState = TerminalDevice()
-    val terminalDevice = DeviceInstance(terminalDeviceState)
+    val terminalDevice = DeviceInstance.create(terminalDeviceState, NoControls)
 
     override fun generate(output: FloatArray, sampleCount: Int, channelCount: Int) {
         // TODO: Maybe passing in the static processingState here is not the cleanest way to go

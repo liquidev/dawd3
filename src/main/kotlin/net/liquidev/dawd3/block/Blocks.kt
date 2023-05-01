@@ -10,7 +10,7 @@ import net.liquidev.dawd3.block.device.AnyDeviceBlockDescriptor
 import net.liquidev.dawd3.block.device.DeviceBlock
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.block.device.DeviceBlockEntityRenderer
-import net.liquidev.dawd3.block.devices.FaderBlockDescriptor
+import net.liquidev.dawd3.block.devices.KnobBlockDescriptor
 import net.liquidev.dawd3.block.devices.SineOscillatorBlockDescriptor
 import net.liquidev.dawd3.block.devices.SpeakerBlockDescriptor
 import net.liquidev.dawd3.item.Items
@@ -61,7 +61,7 @@ object Blocks {
     // Device blocks
     val speaker = registerDeviceBlock(SpeakerBlockDescriptor)
     val sineOscillator = registerDeviceBlock(SineOscillatorBlockDescriptor)
-    val fader = registerDeviceBlock(FaderBlockDescriptor)
+    val knob = registerDeviceBlock(KnobBlockDescriptor)
 
     fun initialize() {}
 

@@ -6,18 +6,19 @@ import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 
 object Textures {
+
     /**
      * The set of textures that are not referenced by models but need to be loaded into the
      * block atlas.
      */
-    private val nonModel = arrayOf(
+    private val nonModelBlockTextures = arrayOf(
         Identifier(Mod.id, "device/cable"),
     )
 
     fun initializeClient() {
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
             .register { _, registry ->
-                for (id in nonModel) {
+                for (id in nonModelBlockTextures) {
                     registry.register(id)
                 }
             }

@@ -2,11 +2,18 @@ package net.liquidev.dawd3.block.device
 
 import net.liquidev.dawd3.common.*
 import net.liquidev.dawd3.item.PatchCableItem
+import net.liquidev.dawd3.ui.Rack
 import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.client.MinecraftClient
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.Properties
+import net.minecraft.util.ActionResult
+import net.minecraft.util.Hand
+import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3f
 import net.minecraft.util.shape.VoxelShape
@@ -66,5 +73,40 @@ class DeviceBlock(private val descriptor: AnyDeviceBlockDescriptor) :
     ): VoxelShape {
         val direction = HorizontalDirection.fromDirection(state[Properties.HORIZONTAL_FACING])!!
         return VoxelShapes.cuboid(outlineCuboids[direction.index])
+    }
+
+    @Deprecated("do not call this function directly")
+    override fun onUse(
+        state: BlockState,
+        world: World,
+        pos: BlockPos,
+        player: PlayerEntity,
+        hand: Hand,
+        hit: BlockHitResult,
+    ): ActionResult {
+        val blockEntity =
+            world.getBlockEntity(pos) as? DeviceBlockEntity ?: return ActionResult.PASS
+
+        // We have to check this event ahead of time (in addition to doing it in PatchCableItem)
+        // because block interactions take priority over item interactions.
+        val usedPortName = DeviceBlockInteractions.findUsedPort(hit, blockEntity.descriptor)
+        // TODO: Right-clicking the port should pop out its patch cable.
+
+        if (usedPortName == null && world is ClientWorld && !player.isSneaking) {
+            val rack = Rack(world, Rack.collectAdjacentDevices(world, pos))
+            if (rack.hasOpenWindows()) {
+                MinecraftClient.getInstance().setScreen(rack)
+                return ActionResult.SUCCESS
+            }
+        }
+        if (usedPortName != null && player.isSneaking) {
+            return if (blockEntity.severConnectionsInPort(usedPortName)) {
+                ActionResult.SUCCESS
+            } else {
+                ActionResult.PASS
+            }
+        }
+
+        return ActionResult.PASS
     }
 }

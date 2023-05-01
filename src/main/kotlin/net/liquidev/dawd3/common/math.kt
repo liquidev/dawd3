@@ -26,15 +26,6 @@ fun Vec3f.max(other: Vec3f): Vec3f = Vec3f(max(x, other.x), max(y, other.y), max
 val Vec3f.lengthSquared get() = x * x + y * y + z * z
 val Vec3f.length get() = sqrt(lengthSquared)
 
-fun Vec3f.normalize() {
-    val length = length
-    if (length != 0f) {
-        set(x / length, y / length, z / length)
-    } else {
-        set(0f, 0f, 0f)
-    }
-}
-
 operator fun Vec3d.plus(other: Vec3d): Vec3d = Vec3d(x + other.x, y + other.y, z + other.z)
 operator fun Vec3d.minus(other: Vec3d): Vec3d = Vec3d(x - other.x, y - other.y, z - other.z)
 operator fun Vec3d.times(other: Vec3d): Vec3d = Vec3d(x * other.x, y * other.y, z * other.z)
@@ -136,6 +127,12 @@ fun pointInRectangle(point: Vec2f, topLeft: Vec2f, bottomRight: Vec2f) =
 fun lerp(a: Float, b: Float, t: Float): Float =
     a + t * (b - a)
 
+fun mapRange(value: Float, fromMin: Float, fromMax: Float, toMin: Float, toMax: Float): Float =
+    toMin + (value - fromMin) / (fromMax - fromMin) * (toMax - toMin)
+
+fun clamp(value: Float, min: Float, max: Float): Float =
+    max(min(value, max), min)
+
 object Cuboids {
     val fullBlock = Box(0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
     val halfBlock = Box(0.0, 0.0, 0.0, 1.0, 0.5, 1.0)
@@ -145,3 +142,15 @@ object Cuboids {
 
 val Box.fromF get() = Vec3f(minX.toFloat(), minY.toFloat(), minZ.toFloat())
 val Box.toF get() = Vec3f(maxX.toFloat(), maxY.toFloat(), maxZ.toFloat())
+
+@JvmInline
+value class Radians(val value: Float) {
+    fun toDegrees() =
+        Degrees(value / PI.toFloat() * 180f)
+}
+
+@JvmInline
+value class Degrees(val value: Float) {
+    fun toRadians() =
+        Radians(value / 180f * PI.toFloat())
+}

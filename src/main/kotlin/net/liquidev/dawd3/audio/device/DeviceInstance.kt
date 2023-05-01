@@ -1,6 +1,6 @@
 package net.liquidev.dawd3.audio.device
 
-class DeviceInstance(val state: Device) {
+class DeviceInstance private constructor(val state: Device<ControlSet>, val controls: ControlSet) {
     val inputPortsByName = hashMapOf<PortName, InputPort>()
     val outputPortsByName = hashMapOf<PortName, OutputPort>()
 
@@ -29,11 +29,18 @@ class DeviceInstance(val state: Device) {
             for ((_, port) in inputPortsByName) {
                 port.connectedOutput?.owningDevice?.process(sampleCount, channels, processingState)
             }
-            state.process(sampleCount, channels)
+            state.process(sampleCount, channels, controls)
         }
     }
 
     override fun toString(): String {
         return "DeviceInstance($state)"
+    }
+
+    companion object {
+        fun <T : ControlSet> create(state: Device<T>, controls: T) =
+            // NOTE: We're erasing the type from concrete T to Controls, the cast is fine.
+            @Suppress("UNCHECKED_CAST")
+            DeviceInstance(state as Device<ControlSet>, controls)
     }
 }

@@ -18,5 +18,6 @@
   "item.dawd3.black_patch_cable": "Black Patch Cable",
   "block.dawd3.speaker": "Speaker",
   "block.dawd3.sine_oscillator": "Sine Oscillator",
-  "block.dawd3.fader": "Fader"
+  "block.dawd3.knob": "Knob",
+  "screen.dawd3.rack.title": "Rack"
 }
