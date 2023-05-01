@@ -11,6 +11,7 @@ import net.liquidev.dawd3.block.device.DeviceBlock
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.block.device.DeviceBlockEntityRenderer
 import net.liquidev.dawd3.block.devices.KnobBlockDescriptor
+import net.liquidev.dawd3.block.devices.PhaseBlockDescriptor
 import net.liquidev.dawd3.block.devices.SineOscillatorBlockDescriptor
 import net.liquidev.dawd3.block.devices.SpeakerBlockDescriptor
 import net.liquidev.dawd3.item.Items
@@ -56,12 +57,13 @@ object Blocks {
         Registry.BLOCK,
         Identifier(Mod.id, "patch_cable_plug"),
         Block(FabricBlockSettings.of(Material.METAL))
-    )
+    )!!
 
     // Device blocks
     val speaker = registerDeviceBlock(SpeakerBlockDescriptor)
-    val sineOscillator = registerDeviceBlock(SineOscillatorBlockDescriptor)
     val knob = registerDeviceBlock(KnobBlockDescriptor)
+    val phase = registerDeviceBlock(PhaseBlockDescriptor)
+    val sineOscillator = registerDeviceBlock(SineOscillatorBlockDescriptor)
 
     fun initialize() {}
 

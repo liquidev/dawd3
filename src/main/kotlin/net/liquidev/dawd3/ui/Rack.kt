@@ -1,7 +1,5 @@
 package net.liquidev.dawd3.ui
 
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.render.Atlas
@@ -16,7 +14,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-@Environment(EnvType.CLIENT)
 class Rack(
     val world: ClientWorld,
     shownDevices: Iterable<BlockPos>,
@@ -30,7 +27,8 @@ class Rack(
         var windowX = 32
         ArrayList(shownDevices.mapNotNull { blockPosition ->
             val blockEntity = world.getBlockEntity(blockPosition) as DeviceBlockEntity
-            blockEntity.descriptor.openUI(blockEntity.controls, windowX, 32)
+            blockEntity.descriptor.ui
+                ?.open(blockEntity.controls, windowX, 32)
                 ?.let { widget ->
                     windowX += widget.width + 8
                     OpenWidget(blockPosition, widget)

@@ -1,9 +1,9 @@
 package net.liquidev.dawd3.block.device
 
-import FaceTextures
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.liquidev.dawd3.audio.device.ControlSet
 import net.liquidev.dawd3.audio.device.DeviceInstance
+import net.liquidev.dawd3.block.device.descriptor.FaceTextures
 import net.liquidev.dawd3.common.Cuboids
 import net.liquidev.dawd3.ui.widget.Widget
 import net.minecraft.block.AbstractBlock
@@ -40,6 +40,11 @@ interface DeviceBlockDescriptor<out CS : DeviceBlockDescriptor.ClientState, out 
         val logicalDevice: DeviceInstance
     }
 
-    fun openUI(controls: @UnsafeVariance Controls, x: Int, y: Int): Widget? = null
+    interface UI<out Controls : ControlSet> {
+        fun open(controls: @UnsafeVariance Controls, x: Int, y: Int): Widget
+    }
+
+    val ui: UI<Controls>?
+        get() = null
 }
 

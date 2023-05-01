@@ -1,11 +1,11 @@
 package net.liquidev.dawd3.block.devices
 
-import FaceTextures
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.DeviceInstance
 import net.liquidev.dawd3.audio.devices.ConstantDevice
 import net.liquidev.dawd3.block.device.DeviceBlockDescriptor
 import net.liquidev.dawd3.block.device.PhysicalPort
+import net.liquidev.dawd3.block.device.descriptor.FaceTextures
 import net.liquidev.dawd3.common.Cuboids
 import net.liquidev.dawd3.ui.widget.Knob
 import net.liquidev.dawd3.ui.widget.Widget
@@ -30,8 +30,7 @@ object KnobBlockDescriptor : DeviceBlockDescriptor<KnobBlockDescriptor.ClientSta
     override val faceTextures = FaceTextures.withFrontAndSide { id }
 
     class ClientState(controls: ConstantDevice.Controls) : DeviceBlockDescriptor.ClientState {
-        override val logicalDevice =
-            DeviceInstance.create(ConstantDevice(), controls)
+        override val logicalDevice = DeviceInstance.create(ConstantDevice(), controls)
     }
 
     override fun initControls() = ConstantDevice.Controls()
@@ -39,17 +38,19 @@ object KnobBlockDescriptor : DeviceBlockDescriptor<KnobBlockDescriptor.ClientSta
     override fun onClientLoad(controls: ConstantDevice.Controls, world: ClientWorld) =
         ClientState(controls)
 
-    override fun openUI(controls: ConstantDevice.Controls, x: Int, y: Int): Widget =
-        Window(x, y, 48, 48, Text.translatable("block.dawd3.knob")).apply {
-            children.add(
-                Knob(
-                    x = 14,
-                    y = 18,
-                    control = controls.value,
-                    min = -48f,
-                    max = 48f,
-                    color = Knob.Color.Blue
+    override val ui = object : DeviceBlockDescriptor.UI<ConstantDevice.Controls> {
+        override fun open(controls: ConstantDevice.Controls, x: Int, y: Int): Widget =
+            Window(x, y, 48, 48, Text.translatable("block.dawd3.knob")).apply {
+                children.add(
+                    Knob(
+                        x = 14,
+                        y = 18,
+                        control = controls.value,
+                        min = -48f,
+                        max = 48f,
+                        color = Knob.Color.Blue
+                    )
                 )
-            )
-        }
+            }
+    }
 }

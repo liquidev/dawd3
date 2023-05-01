@@ -90,18 +90,27 @@ class DeviceBlock(private val descriptor: AnyDeviceBlockDescriptor) :
         // We have to check this event ahead of time (in addition to doing it in PatchCableItem)
         // because block interactions take priority over item interactions.
         val usedPortName = DeviceBlockInteractions.findUsedPort(hit, blockEntity.descriptor)
-        // TODO: Right-clicking the port should pop out its patch cable.
+        // TODO: Right-clicking the port should pop out its patch cable, not just remove it.
 
-        if (usedPortName == null && world is ClientWorld && !player.isSneaking) {
-            val rack = Rack(world, Rack.collectAdjacentDevices(world, pos))
-            if (rack.hasOpenWindows()) {
-                MinecraftClient.getInstance().setScreen(rack)
-                return ActionResult.SUCCESS
+        if (usedPortName == null && !player.isSneaking) {
+            // We have to do a little dance such that the server executes this code too and doesn't
+            // try to perform the item action if the UI is opened.
+            val adjacentDevices = Rack.collectAdjacentDevices(world, pos)
+            val shouldOpenUI = adjacentDevices.any { blockPos ->
+                val blockEntityAtPosition =
+                    world.getBlockEntity(blockPos) as? DeviceBlockEntity ?: return@any false
+                blockEntityAtPosition.descriptor.ui != null
+            }
+            if (shouldOpenUI) {
+                if (world is ClientWorld) {
+                    MinecraftClient.getInstance().setScreen(Rack(world, adjacentDevices))
+                }
+                return ActionResult.success(world.isClient)
             }
         }
         if (usedPortName != null && player.isSneaking) {
             return if (blockEntity.severConnectionsInPort(usedPortName)) {
-                ActionResult.SUCCESS
+                ActionResult.success(world.isClient)
             } else {
                 ActionResult.PASS
             }

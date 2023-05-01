@@ -37,6 +37,7 @@ object Audio {
     }
 
     fun initializeClient() {
+        // TODO: Could probably use the output stream's native pausing and unpausing capabilities here.
         D3ClientEvents.PAUSE.register { isPaused ->
             pauseAdapter.playing = !isPaused
         }

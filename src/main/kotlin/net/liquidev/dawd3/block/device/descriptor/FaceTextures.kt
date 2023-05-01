@@ -1,3 +1,5 @@
+package net.liquidev.dawd3.block.device.descriptor
+
 import net.minecraft.util.Identifier
 
 interface FaceTextures {

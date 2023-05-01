@@ -56,7 +56,7 @@ object DeviceBlockModel {
             east = face(texture = "#right", cullface = "east"),
             south = face(texture = "#back", cullface = "south"),
             west = face(texture = "#left", cullface = "west"),
-            up = face(texture = "#top", cullface = "up"),
+            up = face(texture = "#top", cullface = "up", rotation = 180),
             down = face(texture = "#bottom", cullface = "down"),
         )
     )
