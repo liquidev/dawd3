@@ -4,7 +4,9 @@ import net.liquidev.d3r.D3r
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.generator.GeneratorWithProcessingState
 import net.liquidev.dawd3.audio.generator.MixGenerator
+import net.liquidev.dawd3.audio.generator.PausableGenerator
 import net.liquidev.dawd3.audio.unit.Frequency
+import net.liquidev.dawd3.events.D3ClientEvents
 
 /** Audio system and common settings. */
 object Audio {
@@ -23,19 +25,21 @@ object Audio {
     val mixer = MixGenerator()
     private val processingStateAdapter = GeneratorWithProcessingState(mixer)
     val processingState get() = processingStateAdapter.processingState
+    private val pauseAdapter = PausableGenerator(processingStateAdapter)
 
     init {
         logger.info("initializing")
         D3r.openDefaultHost()
         outputDeviceId = D3r.openDefaultOutputDevice()
         outputStreamId =
-            D3r.openOutputStream(outputDeviceId, sampleRate, 1, bufferSize, processingStateAdapter)
+            D3r.openOutputStream(outputDeviceId, sampleRate, 1, bufferSize, pauseAdapter)
         D3r.startPlayback(outputStreamId)
     }
 
     fun initializeClient() {
-        // Stubbed out; this is called explicitly to force the otherwise lazy initialization
-        // of Audio.
+        D3ClientEvents.PAUSE.register { isPaused ->
+            pauseAdapter.playing = !isPaused
+        }
     }
 
     fun deinitialize() {
