@@ -10,7 +10,12 @@ import net.liquidev.dawd3.block.device.AnyDeviceBlockDescriptor
 import net.liquidev.dawd3.block.device.DeviceBlock
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.block.device.DeviceBlockEntityRenderer
-import net.liquidev.dawd3.block.devices.*
+import net.liquidev.dawd3.block.devices.KnobBlockDescriptor
+import net.liquidev.dawd3.block.devices.SpeakerBlockDescriptor
+import net.liquidev.dawd3.block.devices.oscillator.PhaseBlockDescriptor
+import net.liquidev.dawd3.block.devices.oscillator.PulseOscillatorBlockDescriptor
+import net.liquidev.dawd3.block.devices.oscillator.SawOscillatorBlockDescriptor
+import net.liquidev.dawd3.block.devices.oscillator.SineOscillatorBlockDescriptor
 import net.liquidev.dawd3.item.Items
 import net.minecraft.block.Block
 import net.minecraft.block.Material
@@ -64,6 +69,7 @@ object Blocks {
     val phase = registerDeviceBlock(PhaseBlockDescriptor)
     val sineOscillator = registerDeviceBlock(SineOscillatorBlockDescriptor)
     val sawOscillator = registerDeviceBlock(SawOscillatorBlockDescriptor)
+    val pulseOscillator = registerDeviceBlock(PulseOscillatorBlockDescriptor)
 
     fun initialize() {}
 

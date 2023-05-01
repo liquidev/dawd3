@@ -55,12 +55,12 @@
       },
       "from": [
         3.0,
-        6.0,
+        3.0,
         -0.01
       ],
       "to": [
         7.0,
-        10.0,
+        7.0,
         0.01
       ]
     },
@@ -79,24 +79,24 @@
       },
       "from": [
         9.0,
-        6.0,
+        3.0,
         -0.01
       ],
       "to": [
         13.0,
-        10.0,
+        7.0,
         0.01
       ]
     }
   ],
   "textures": {
-    "back": "dawd3:block/sine_oscillator_side",
-    "bottom": "dawd3:block/sine_oscillator_side",
-    "front": "dawd3:block/sine_oscillator_front",
-    "left": "dawd3:block/sine_oscillator_side",
-    "particle": "dawd3:block/sine_oscillator_side",
+    "back": "dawd3:block/pulse_oscillator_side",
+    "bottom": "dawd3:block/pulse_oscillator_side",
+    "front": "dawd3:block/pulse_oscillator_front",
+    "left": "dawd3:block/pulse_oscillator_side",
+    "particle": "dawd3:block/pulse_oscillator_side",
     "port": "dawd3:device/port",
-    "right": "dawd3:block/sine_oscillator_side",
-    "top": "dawd3:block/sine_oscillator_side"
+    "right": "dawd3:block/pulse_oscillator_side",
+    "top": "dawd3:block/pulse_oscillator_side"
   }
 }

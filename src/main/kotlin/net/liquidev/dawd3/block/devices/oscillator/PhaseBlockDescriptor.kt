@@ -1,4 +1,4 @@
-package net.liquidev.dawd3.block.devices
+package net.liquidev.dawd3.block.devices.oscillator
 
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.DeviceInstance
