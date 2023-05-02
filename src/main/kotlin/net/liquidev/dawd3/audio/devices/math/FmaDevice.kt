@@ -16,12 +16,12 @@ class FmaDevice : Device<FmaDevice.Controls> {
     }
 
     class Controls : ControlSet {
-        val multiply = Control(multiplyControl)
-        val add = Control(addControl)
+        val multiply = FloatControl(multiplyControl)
+        val add = FloatControl(addControl)
 
-        override fun visitControls(visit: (ControlDescriptor, Control) -> Unit) {
-            visit(multiplyControl, multiply)
-            visit(addControl, add)
+        override fun visitControls(visit: (ControlName, Control) -> Unit) {
+            visit(multiplyControl.name, multiply)
+            visit(addControl.name, add)
         }
     }
 

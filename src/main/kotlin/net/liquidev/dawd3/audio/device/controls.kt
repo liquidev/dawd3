@@ -1,6 +1,9 @@
 package net.liquidev.dawd3.audio.device
 
+import net.minecraft.nbt.NbtElement
+import net.minecraft.nbt.NbtFloat
 import net.minecraft.util.Identifier
+import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicInteger
 
 class ControlName(parent: Identifier, name: String) {
@@ -20,37 +23,58 @@ class ControlName(parent: Identifier, name: String) {
     }
 }
 
-data class ControlDescriptor(
+data class ControlDescriptor<T>(
     val name: ControlName,
-    val initialValue: Float,
+    val initialValue: T,
 ) {
     constructor(
         parent: Identifier,
         name: String,
-        initialValue: Float,
+        initialValue: T,
     ) : this(ControlName(parent, name), initialValue)
 }
 
-class Control(val descriptor: ControlDescriptor) {
+sealed interface Control {
+    fun valueToNBT(): NbtElement
+    fun valueFromNBT(element: NbtElement)
+
+    fun valueToBytes(): ByteArray
+    fun valueFromBytes(buffer: ByteArray)
+}
+
+class FloatControl(val descriptor: ControlDescriptor<Float>) : Control {
     private val internalValue = AtomicInteger(descriptor.initialValue.toBits())
     var value: Float
         get() = Float.fromBits(internalValue.get())
         set(value) = internalValue.set(value.toBits())
+
+    override fun valueToNBT(): NbtElement = NbtFloat.of(value)
+
+    override fun valueFromNBT(element: NbtElement) {
+        value = (element as? NbtFloat)?.floatValue() ?: 0f
+    }
+
+    override fun valueToBytes(): ByteArray =
+        ByteBuffer.allocate(4).putFloat(value).array()
+
+    override fun valueFromBytes(buffer: ByteArray) {
+        value = ByteBuffer.wrap(buffer).getFloat()
+    }
 }
 
 interface ControlSet {
-    fun visitControls(visit: (ControlDescriptor, Control) -> Unit)
+    fun visitControls(visit: (ControlName, Control) -> Unit)
 }
 
 object NoControls : ControlSet {
-    override fun visitControls(visit: (ControlDescriptor, Control) -> Unit) {}
+    override fun visitControls(visit: (ControlName, Control) -> Unit) {}
 }
 
 class ControlMap(set: ControlSet) {
     private val map = hashMapOf<ControlName, Control>()
 
     init {
-        set.visitControls { controlDescriptor, control -> map[controlDescriptor.name] = control }
+        set.visitControls { controlName, control -> map[controlName] = control }
     }
 
     operator fun get(name: ControlName): Control? = map[name]

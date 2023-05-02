@@ -1,7 +1,7 @@
 package net.liquidev.dawd3.ui.widget
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.liquidev.dawd3.audio.device.Control
+import net.liquidev.dawd3.audio.device.FloatControl
 import net.liquidev.dawd3.common.Degrees
 import net.liquidev.dawd3.common.Radians
 import net.liquidev.dawd3.common.clamp
@@ -23,7 +23,7 @@ import kotlin.math.sin
 class Knob(
     x: Int,
     y: Int,
-    val control: Control,
+    val control: FloatControl,
     val min: Float,
     val max: Float,
     val color: Color,
@@ -130,16 +130,16 @@ class Knob(
                 if (draggingInfo != null) {
                     val guiScale = client.options.guiScale.value.toFloat()
                     val deltaY = (draggingInfo.previousMouseY - event.absoluteMouseY) * guiScale
+                    // Reflect the change locally immediately for lower latency.
+                    control.value = alterValue(control.value, by = deltaY.toFloat())
                     ClientPlayNetworking.send(
                         TweakControl.id,
                         TweakControl(
                             context.blockPosition,
                             control.descriptor.name.id,
-                            newValue = alterValue(control.value, by = deltaY.toFloat()),
+                            control.valueToBytes()
                         ).serialize()
                     )
-                    // Reflect the change locally immediately for lower latency.
-                    control.value = alterValue(control.value, by = deltaY.toFloat())
                     draggingInfo.previousMouseY = event.absoluteMouseY
                 }
             }

@@ -12,10 +12,10 @@ class ConstantDevice : Device<ConstantDevice.Controls> {
     }
 
     class Controls : ControlSet {
-        val value = Control(valueControl)
+        val value = FloatControl(valueControl)
 
-        override fun visitControls(visit: (ControlDescriptor, Control) -> Unit) {
-            visit(valueControl, value)
+        override fun visitControls(visit: (ControlName, Control) -> Unit) {
+            visit(valueControl.name, value)
         }
     }
 

@@ -8,7 +8,10 @@ import net.liquidev.dawd3.block.entity.D3BlockEntity
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.world.ClientWorld
-import net.minecraft.nbt.*
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtElement
+import net.minecraft.nbt.NbtHelper
+import net.minecraft.nbt.NbtList
 import net.minecraft.util.math.BlockPos
 
 private typealias DeviceBlockFactory = FabricBlockEntityTypeBuilder.Factory<DeviceBlockEntity>
@@ -63,11 +66,13 @@ class DeviceBlockEntity(
         super.readNbt(nbt)
 
         val controlsNbt = nbt.getCompound(Nbt.controls)
-        controls.visitControls { controlDescriptor, control ->
-            val controlName = controlDescriptor.name.toString()
-            if (controlName in controlsNbt) {
-                val value = controlsNbt.getFloat(controlName)
-                control.value = value
+        controls.visitControls { controlName, control ->
+            val controlNameString = controlName.toString()
+            if (controlNameString in controlsNbt) {
+                val element = controlsNbt.get(controlNameString)
+                if (element != null) {
+                    control.valueFromNBT(element)
+                }
             }
         }
 
@@ -119,8 +124,8 @@ class DeviceBlockEntity(
         super.writeNbt(nbt)
 
         val controlsNbt = NbtCompound()
-        controls.visitControls { controlDescriptor, control ->
-            controlsNbt.put(controlDescriptor.name.toString(), NbtFloat.of(control.value))
+        controls.visitControls { controlName, control ->
+            controlsNbt.put(controlName.toString(), control.valueToNBT())
         }
         nbt.put(Nbt.controls, controlsNbt)
 

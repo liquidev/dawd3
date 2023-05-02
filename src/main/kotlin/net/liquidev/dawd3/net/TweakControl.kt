@@ -11,7 +11,7 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 
-data class TweakControl(val position: BlockPos, val control: Identifier, val newValue: Float) {
+data class TweakControl(val position: BlockPos, val control: Identifier, val data: ByteArray) {
     companion object {
         val id = Identifier(Mod.id, "tweak_control")
 
@@ -28,8 +28,8 @@ data class TweakControl(val position: BlockPos, val control: Identifier, val new
                             ?: return@execute
                     val controlName =
                         ControlName.fromString(packet.control.toString()) ?: return@execute
-                    val control = blockEntity.controlMap[controlName]
-                    control?.value = packet.newValue
+                    val control = blockEntity.controlMap[controlName] ?: return@execute
+                    control.valueFromBytes(packet.data)
 
                     val witnesses = PlayerLookup.tracking(blockEntity)
                     for (witness in witnesses) {
@@ -42,7 +42,7 @@ data class TweakControl(val position: BlockPos, val control: Identifier, val new
                                 TweakControl(
                                     packet.position,
                                     packet.control,
-                                    packet.newValue,
+                                    packet.data,
                                 ).serialize()
                             )
                         }
@@ -63,7 +63,7 @@ data class TweakControl(val position: BlockPos, val control: Identifier, val new
                         val controlName =
                             ControlName.fromString(packet.control.toString()) ?: return@execute
                         val control = blockEntity.controlMap[controlName]
-                        control?.value = packet.newValue
+                        control?.valueFromBytes(packet.data)
                     }
                 }
             }
@@ -73,7 +73,7 @@ data class TweakControl(val position: BlockPos, val control: Identifier, val new
             TweakControl(
                 position = buffer.readBlockPos(),
                 control = buffer.readIdentifier(),
-                newValue = buffer.readFloat(),
+                data = buffer.readByteArray(),
             )
     }
 
@@ -81,7 +81,25 @@ data class TweakControl(val position: BlockPos, val control: Identifier, val new
         val buffer = PacketByteBufs.create()
         buffer.writeBlockPos(position)
         buffer.writeIdentifier(control)
-        buffer.writeFloat(newValue)
+        buffer.writeByteArray(data)
         return buffer
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TweakControl
+
+        if (position != other.position) return false
+        if (control != other.control) return false
+        return data.contentEquals(other.data)
+    }
+
+    override fun hashCode(): Int {
+        var result = position.hashCode()
+        result = 31 * result + control.hashCode()
+        result = 31 * result + data.contentHashCode()
+        return result
     }
 }

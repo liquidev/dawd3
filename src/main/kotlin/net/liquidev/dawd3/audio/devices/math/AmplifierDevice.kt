@@ -18,12 +18,12 @@ class AmplifierDevice : Device<AmplifierDevice.Controls> {
     }
 
     class Controls : ControlSet {
-        val amplitude = Control(amplitudeControl)
-        val amplitudeCV = Control(amplitudeCVControl)
+        val amplitude = FloatControl(amplitudeControl)
+        val amplitudeCV = FloatControl(amplitudeCVControl)
 
-        override fun visitControls(visit: (ControlDescriptor, Control) -> Unit) {
-            visit(amplitudeControl, amplitude)
-            visit(amplitudeCVControl, amplitudeCV)
+        override fun visitControls(visit: (ControlName, Control) -> Unit) {
+            visit(amplitudeControl.name, amplitude)
+            visit(amplitudeCVControl.name, amplitudeCV)
         }
     }
 
