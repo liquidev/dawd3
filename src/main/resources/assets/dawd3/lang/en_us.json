@@ -16,9 +16,14 @@
   "item.dawd3.green_patch_cable": "Green Patch Cable",
   "item.dawd3.red_patch_cable": "Red Patch Cable",
   "item.dawd3.black_patch_cable": "Black Patch Cable",
+  "block.dawd3.amplifier": "Amplifier",
   "block.dawd3.knob": "Knob",
+  "block.dawd3.modulator": "Modulator",
   "block.dawd3.phase": "Phase",
+  "block.dawd3.pulse_oscillator": "Pulse Oscillator",
   "block.dawd3.speaker": "Speaker",
+  "block.dawd3.saw_oscillator": "Saw Oscillator",
   "block.dawd3.sine_oscillator": "Sine Oscillator",
+  "block.dawd3.triangle_oscillator": "Triangle Oscillator",
   "screen.dawd3.rack.title": "Rack"
 }

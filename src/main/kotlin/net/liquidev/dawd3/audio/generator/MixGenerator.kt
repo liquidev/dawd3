@@ -60,6 +60,16 @@ class MixGenerator : AudioGenerator() {
         }
     }
 
+    fun appendDebugInfo(outDebugInfo: MutableList<String>) {
+        outDebugInfo.add("[d³] MixGenerator device graph profile:")
+        channels.mapNotNull { it.get() }.forEachIndexed { index, channel ->
+            val generator = channel.generator
+            if (generator is DeviceGraphGenerator) {
+                outDebugInfo.add("[d³]    - DeviceGraph #$index: ${generator.profileResult} ns")
+            }
+        }
+    }
+
     class Channel<out T : AudioGenerator>(
         private val taskQueue: TaskQueue<Unit, Unit>,
         val generator: T,

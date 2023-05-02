@@ -7,6 +7,7 @@ import net.liquidev.dawd3.audio.generator.MixGenerator
 import net.liquidev.dawd3.audio.generator.PausableGenerator
 import net.liquidev.dawd3.audio.unit.Frequency
 import net.liquidev.dawd3.events.D3ClientEvents
+import net.liquidev.dawd3.events.DebugHudEvents
 
 /** Audio system and common settings. */
 object Audio {
@@ -40,6 +41,10 @@ object Audio {
         // TODO: Could probably use the output stream's native pausing and unpausing capabilities here.
         D3ClientEvents.PAUSE.register { isPaused ->
             pauseAdapter.playing = !isPaused
+        }
+
+        DebugHudEvents.ADD_DEBUG_INFO.register { debugHud ->
+            mixer.appendDebugInfo(debugHud)
         }
     }
 

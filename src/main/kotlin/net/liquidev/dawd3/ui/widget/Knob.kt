@@ -27,7 +27,8 @@ class Knob(
     val min: Float,
     val max: Float,
     val color: Color,
-    val sensitivity: Float = 0.25f,
+    // Pick a default sensitivity such that for pitch ranges we move by steps of 0.25.
+    val sensitivity: Float = (max - min) * 0.25f / 96f,
 ) : Widget(x, y) {
     override val width = 20
     override val height = 20

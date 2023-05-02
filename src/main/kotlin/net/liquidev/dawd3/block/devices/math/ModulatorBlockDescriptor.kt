@@ -44,7 +44,7 @@ object ModulatorBlockDescriptor : DeviceBlockDescriptor<ModulatorBlockDescriptor
 
     override val ui = object : DeviceBlockDescriptor.UI<FmaDevice.Controls> {
         override fun open(controls: FmaDevice.Controls, x: Int, y: Int): Widget =
-            Window(x, y, 74, 48, Text.translatable("block.dawd3.modulator")).apply {
+            Window(x, y, 78, 48, Text.translatable("block.dawd3.modulator")).apply {
                 children.add(
                     Knob(
                         x = 14,
