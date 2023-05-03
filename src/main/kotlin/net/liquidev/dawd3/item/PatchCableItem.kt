@@ -21,14 +21,16 @@ class PatchCableItem(settings: Settings, val color: Byte) : BasicItem(settings) 
     override fun useOnBlock(context: ItemUsageContext): ActionResult {
         if (context.player?.isSneaking != true) {
             val blockEntity = context.world.getBlockEntity(context.blockPos)
-            if (!context.world.isClient && blockEntity is DeviceBlockEntity) {
+            if (blockEntity is DeviceBlockEntity) {
                 val portName =
                     DeviceBlockInteractions.findUsedPort(context.hitResult, blockEntity.descriptor)
                 if (portName != null) {
                     useOnPort(context, portName)
                 }
+                return ActionResult.success(context.world.isClient)
+            } else {
+                return ActionResult.PASS
             }
-            return ActionResult.success(context.world.isClient)
         } else {
             return context.world.getBlockState(context.blockPos)
                 .onUse(context.world, context.player, context.hand, context.hitResult)
@@ -36,41 +38,46 @@ class PatchCableItem(settings: Settings, val color: Byte) : BasicItem(settings) 
     }
 
     private fun useOnPort(context: ItemUsageContext, portName: PortName) {
-        val player = context.player
-        if (player == null || player !is ServerPlayerEntity) {
-            return
-        }
+        val isClient = context.world.isClient
+        val player = context.player ?: return
 
-        val ongoingConnection = ongoingConnectionsServer[player]
+        val ongoingConnection =
+            if (isClient) ongoingConnectionsClient[player] else ongoingConnectionsServer[player]
         if (ongoingConnection == null) {
+            // Do this action both on the client and the server, such that the player visually
+            // sees that a port is being connected.
             startConnecting(player, OngoingConnection(context.blockPos, portName, color))
-            ServerPlayNetworking.send(
-                player,
-                StartConnectingPorts.id,
-                StartConnectingPorts(context.blockPos, portName.toString(), color).serialize()
-            )
+            if (player is ServerPlayerEntity) {
+                ServerPlayNetworking.send(
+                    player,
+                    StartConnectingPorts.id,
+                    StartConnectingPorts(context.blockPos, portName.toString(), color).serialize()
+                )
+            }
         } else {
             if (portName.direction != ongoingConnection.portName.direction) {
-                val world = context.world as ServerWorld
+                val world = context.world
 
                 val fromPosition = ongoingConnection.blockPosition
                 val fromPort = ongoingConnection.portName
                 val toPosition = context.blockPos
 
-                val witnesses = PlayerLookup.tracking(world, fromPosition).toHashSet()
-                witnesses.addAll(PlayerLookup.tracking(world, toPosition))
-                for (witness in witnesses) {
-                    ServerPlayNetworking.send(
-                        witness,
-                        ConnectPorts.id,
-                        ConnectPorts(
-                            fromPosition,
-                            fromPort.id.toString(),
-                            toPosition,
-                            portName.id.toString(),
-                            ongoingConnection.color,
-                        ).serialize()
-                    )
+                if (world is ServerWorld) {
+                    val witnesses = PlayerLookup.tracking(world, fromPosition).toHashSet()
+                    witnesses.addAll(PlayerLookup.tracking(world, toPosition))
+                    for (witness in witnesses) {
+                        ServerPlayNetworking.send(
+                            witness,
+                            ConnectPorts.id,
+                            ConnectPorts(
+                                fromPosition,
+                                fromPort.id.toString(),
+                                toPosition,
+                                portName.id.toString(),
+                                ongoingConnection.color,
+                            ).serialize()
+                        )
+                    }
                 }
 
                 val fromBlockEntity = world.getBlockEntity(fromPosition)
@@ -105,8 +112,10 @@ class PatchCableItem(settings: Settings, val color: Byte) : BasicItem(settings) 
         internal val ongoingConnectionsClient = hashMapOf<ClientPlayerEntity, OngoingConnection>()
 
         private fun clearOngoingConnection(player: PlayerEntity) {
-            ongoingConnectionsServer.remove(player)
-            ongoingConnectionsClient.remove(player)
+            when (player) {
+                is ServerPlayerEntity -> ongoingConnectionsServer.remove(player)
+                is ClientPlayerEntity -> ongoingConnectionsClient.remove(player)
+            }
         }
 
         internal fun removeAllConnectionsAtBlock(blockPosition: BlockPos) {

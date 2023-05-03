@@ -109,7 +109,7 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
 
         matrixStack.push()
         rotateToFaceFront(blockState, matrixStack)
-        for ((_, connection) in PatchCableItem.ongoingConnectionsServer) {
+        for ((_, connection) in PatchCableItem.ongoingConnectionsClient) {
             if (connection.blockPosition == blockEntity.pos) {
                 val port = blockEntity.descriptor.portLayout[connection.portName]
                 if (port != null) {

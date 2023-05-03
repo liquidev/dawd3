@@ -185,11 +185,14 @@ class DeviceBlockEntity(
         val world = world ?: return false
 
         val clientState = clientState
-        val severedConnections = if (clientState != null) {
+        var severedAnyConnections = false
+        severedAnyConnections = severedAnyConnections or if (clientState != null) {
             val resolvedPortName =
                 if (portName is OutputPortName) portName.resolveInstance() else portName
-            Devices.severAllConnectionsInPort(clientState.logicalDevice, resolvedPortName)
-        } else 0
+            Devices.severAllConnectionsInPort(clientState.logicalDevice, resolvedPortName) > 0
+        } else {
+            false
+        }
 
         when (portName) {
             is InputPortName -> {
@@ -199,6 +202,7 @@ class DeviceBlockEntity(
                     if (blockEntity is DeviceBlockEntity) {
                         blockEntity.outputConnections.remove(inputConnection.outputPortName)
                     }
+                    severedAnyConnections = true
                 }
             }
             is OutputPortName -> {
@@ -208,10 +212,11 @@ class DeviceBlockEntity(
                     if (blockEntity is DeviceBlockEntity) {
                         blockEntity.inputConnections.values.removeAll { it.outputPortName == portName }
                     }
+                    severedAnyConnections = true
                 }
             }
         }
-        return severedConnections != 0
+        return severedAnyConnections
     }
 
     companion object {

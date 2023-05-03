@@ -4,6 +4,7 @@ object Packets {
     fun registerClientReceivers() {
         StartConnectingPorts.registerClientReceiver()
         ConnectPorts.registerClientReceiver()
+        DisconnectPort.registerClientReceiver()
         TweakControl.registerClientReceiver()
     }
 

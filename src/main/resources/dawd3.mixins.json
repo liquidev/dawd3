@@ -6,8 +6,10 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "DebugHudMixin",
-    "PauseMixin",
     "PlayerItemSwitchMixin"
+  ],
+  "client": [
+    "DebugHudMixin",
+    "PauseMixin"
   ]
 }

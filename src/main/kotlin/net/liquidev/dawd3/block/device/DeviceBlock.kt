@@ -1,7 +1,10 @@
 package net.liquidev.dawd3.block.device
 
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.liquidev.dawd3.common.*
 import net.liquidev.dawd3.item.PatchCableItem
+import net.liquidev.dawd3.net.DisconnectPort
 import net.liquidev.dawd3.ui.Rack
 import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
@@ -110,6 +113,21 @@ class DeviceBlock(private val descriptor: AnyDeviceBlockDescriptor) :
         }
         if (usedPortName != null && player.isSneaking) {
             return if (blockEntity.severConnectionsInPort(usedPortName)) {
+                if (!world.isClient) {
+                    val witnesses = PlayerLookup.tracking(blockEntity)
+                    for (witness in witnesses) {
+                        if (witness != player) {
+                            ServerPlayNetworking.send(
+                                witness,
+                                DisconnectPort.id,
+                                DisconnectPort(
+                                    pos,
+                                    usedPortName.id
+                                ).serialize()
+                            )
+                        }
+                    }
+                }
                 ActionResult.success(world.isClient)
             } else {
                 ActionResult.PASS
