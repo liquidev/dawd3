@@ -39,5 +39,7 @@
   "dawd3.control.dawd3.fma.add": "ADD",
   "dawd3.control.dawd3.fma.multiply": "MUL",
   "dawd3.control.dawd3.mix.a_amplitude": "A",
-  "dawd3.control.dawd3.mix.b_amplitude": "B"
+  "dawd3.control.dawd3.mix.b_amplitude": "B",
+  "dawd3.control.dawd3.pulse_oscillator.duty_cycle": "%",
+  "dawd3.control.dawd3.pulse_oscillator.duty_cycle_cv": "CV"
 }

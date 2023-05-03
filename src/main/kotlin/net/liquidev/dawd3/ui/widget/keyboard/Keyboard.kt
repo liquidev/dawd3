@@ -33,13 +33,16 @@ class Keyboard(
     }
 
     override val width = children.maxOf { it.x + it.width }
-    override val height = 24
+    override val height = children.maxOf { it.y + it.height }
 
     private var pressedKey: Key? = null
 
     override fun event(context: EventContext, event: Event): Boolean {
         if (event is MouseButton && event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            mouseIsDown = event.action == Action.Down
+            mouseIsDown = event.action == Action.Down && containsRelativePoint(
+                event.mouseX.toInt(),
+                event.mouseY.toInt()
+            )
             if (mouseIsDown) {
                 setPressedKey(context, findPressedKey(event.mouseX.toInt(), event.mouseY.toInt()))
             } else {

@@ -200,8 +200,7 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
             val startAbsolute = blockEntity.pos.toVec3d()
             val endAbsolute = connection.blockPosition.toVec3d()
 
-            // TODO: Null checks here?
-            val inputPort = blockEntity.descriptor.portLayout[inputPortName]!!
+            val inputPort = blockEntity.descriptor.portLayout[inputPortName] ?: continue
             val outputBlockState = world.getBlockState(connection.blockPosition)
             // TODO: The line below will crash if the block is destroyed (becomes air)
             //  Though it never crashed for me during testing?
@@ -280,14 +279,27 @@ class DeviceBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : B
         colorIndex: Float,
     ) {
         val forward = to - from
+
         val right = forward.copy()
-        right.cross(Vec3f.POSITIVE_Y)
-        right.normalize()
-        right.multiplyComponentwise(cableThickness, cableThickness, cableThickness)
         val up = right.copy()
-        up.cross(forward)
-        up.normalize()
-        up.multiplyComponentwise(cableThickness, cableThickness, cableThickness)
+
+        if (forward.x == 0f && forward.y != 0f && forward.z == 0f) {
+            // Special case: the cross product fails if the cable is going straight up, so we have
+            // to set the vectors ourself.
+            right.set(Vec3f.POSITIVE_X)
+            right.multiplyComponentwise(cableThickness, cableThickness, cableThickness)
+            up.set(Vec3f.POSITIVE_Z)
+            up.multiplyComponentwise(cableThickness, cableThickness, cableThickness)
+        } else {
+            right.cross(Vec3f.POSITIVE_Y)
+            right.normalize()
+            right.multiplyComponentwise(cableThickness, cableThickness, cableThickness)
+            up.set(right)
+            up.cross(forward)
+            up.normalize()
+            up.multiplyComponentwise(cableThickness, cableThickness, cableThickness)
+        }
+
         renderCableWithThicknessVector(
             world,
             matrixStack,

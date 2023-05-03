@@ -6,6 +6,7 @@ import net.liquidev.dawd3.render.Atlas
 import net.liquidev.dawd3.render.Render
 import net.liquidev.dawd3.render.Sprite
 import net.liquidev.dawd3.ui.widget.Widget
+import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.client.world.ClientWorld
@@ -14,6 +15,7 @@ import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import kotlin.math.max
 
 class Rack(
     val world: ClientWorld,
@@ -24,20 +26,38 @@ class Rack(
         val widget: Widget,
     )
 
-    private var openWidgets = run {
-        var windowX = 32
+    private var openWidgets =
         ArrayList(shownDevices.mapNotNull { blockPosition ->
             val blockEntity = world.getBlockEntity(blockPosition) as DeviceBlockEntity
             blockEntity.descriptor.ui
-                ?.open(blockEntity.controls, windowX, 32)
-                ?.let { widget ->
-                    windowX += widget.width + 8
-                    OpenWidget(blockPosition, widget)
-                }
+                ?.open(blockEntity.controls, 0, 0)
+                ?.let { widget -> OpenWidget(blockPosition, widget) }
         })
+
+    private fun layoutWindows() {
+        var x = 16
+        var y = 16
+        var rowHeight = 0
+        for (openWidget in openWidgets) {
+            if (x + openWidget.widget.width >= width - 16) {
+                x = 16
+                y += rowHeight + 8
+                rowHeight = 0
+            }
+            openWidget.widget.x = x
+            openWidget.widget.y = y
+            x += openWidget.widget.width + 8
+            rowHeight = max(rowHeight, openWidget.widget.height)
+        }
     }
 
-    fun hasOpenWindows(): Boolean = openWidgets.isNotEmpty()
+    override fun init() {
+        layoutWindows()
+    }
+
+    override fun resize(client: MinecraftClient?, width: Int, height: Int) {
+        layoutWindows()
+    }
 
     override fun render(matrices: MatrixStack, mouseX: Int, mouseY: Int, delta: Float) {
         renderBackground(matrices)
@@ -52,7 +72,15 @@ class Rack(
             openWidget.widget.draw(matrices, mouseX, mouseY, delta)
         }
 
-        Render.sprite(matrices, 8, 8, badge.width * 2, badge.height * 2, atlas, badge)
+        Render.sprite(
+            matrices,
+            8,
+            height - badge.height - 8,
+            badge.width * 2,
+            badge.height * 2,
+            atlas,
+            badge
+        )
     }
 
     private fun propagateEvent(event: Event): Boolean {

@@ -161,6 +161,9 @@ class Knob(
                         alterValue(control.value, by = deltaY.toFloat())
                     )
                     draggingInfo.previousMouseY = event.absoluteMouseY
+                    // Consume the events so that other controls don't get triggered while the knob
+                    // is being dragged.
+                    return true
                 }
             }
         }

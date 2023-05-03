@@ -1,5 +1,5 @@
-// 1.19.2	2023-05-03T17:34:34.425318453	Models
-ff88cf4c4547ef552e4ed2f859978e7b875c0b56 assets/dawd3/models/block/amplifier.json
+// 1.19.2	2023-05-03T22:15:16.62168443	Models
+5919f5e0f79620a682f481a8e02995f95724b2ce assets/dawd3/models/block/amplifier.json
 c3ea3e310d8fe7796b5b055d34db712cb8c7ac5a assets/dawd3/blockstates/triangle_oscillator.json
 97f0b7f5e19cd8c92915c4dfdedcee0e0b2a4b7f assets/dawd3/models/item/amplifier.json
 0fb5cd695c2a82a2353809529dc8b5086ee2c87d assets/dawd3/blockstates/phase.json
@@ -7,24 +7,24 @@ c3ea3e310d8fe7796b5b055d34db712cb8c7ac5a assets/dawd3/blockstates/triangle_oscil
 a4e8bc89d39021eb8d56ad7735216cb851d67287 assets/dawd3/models/item/light_blue_patch_cable.json
 aa1a1807d2c46f1f25e3d0c507952fefb5b3cd9f assets/dawd3/models/item/knob.json
 d65fd7b21da2adf55a0b076103103da7e7bb453a assets/dawd3/models/block/speaker.json
-df1b924ee7f1a4f9a6496f52a27d74b449ef05fc assets/dawd3/models/block/triangle_oscillator.json
+fe4987cffd1253462cc8440c90ff2341ac3026a4 assets/dawd3/models/block/triangle_oscillator.json
 d1e691559156bd4bf0ec0d488d1a28ac193f4967 assets/dawd3/blockstates/adsr.json
 123ed8aa83a77b4714cee4dfc6747832cf72c75c assets/dawd3/blockstates/mixer.json
 becb814a10bcf2d3e071a6479e9b2289165d0059 assets/dawd3/models/item/modulator.json
 f69a4acfdf715c64f64830ce0a79aa452ad4760a assets/dawd3/models/item/saw_oscillator.json
-e289094bba4daa5de7873e6af154a25f4defc16b assets/dawd3/models/block/modulator.json
+851149820d465dc203cc75e8808a5387e8eb5426 assets/dawd3/models/block/modulator.json
 32bb0e6e3bf75b9005602e8fb1042ad5d41286ad assets/dawd3/models/item/lime_patch_cable.json
 bb8b84a5a98c77aaf9ee25760dfc352b760fc2d3 assets/dawd3/models/item/keyboard.json
 b5cc6f4b4af952380a1539489f2e406bc6ebe5fa assets/dawd3/blockstates/amplifier.json
-2a6b9e841be2ba74ff159488c86d5a569f28798b assets/dawd3/models/block/phase.json
+019bcf77479bfc64a04555f9864e2cbac2055b9f assets/dawd3/models/block/phase.json
 292685c025f28911bca9252da3e4ac72998b3c7a assets/dawd3/blockstates/pulse_oscillator.json
 63c9e9521285c0a1041709a42b2232517debee38 assets/dawd3/blockstates/keyboard.json
 956d8f117df95cf62c8cac375cff853df96840d6 assets/dawd3/models/item/pink_patch_cable.json
 9c18a8292a0c9990cd23bebf5c6191c2114ccc6d assets/dawd3/models/item/black_patch_cable.json
-96135c420e211d0cfee4aff9e1ae98484b4603c4 assets/dawd3/models/block/saw_oscillator.json
+0afd7ba8d87444961a33cb87bba122fca5ebef8e assets/dawd3/models/block/saw_oscillator.json
 67ff4ae22c5f716f1aa2b6e2dac31d12be2336d1 assets/dawd3/blockstates/modulator.json
 64c9ff6a94721f17a823c9d253559e5b9e73662a assets/dawd3/models/block/sine_oscillator.json
-03377aa722945c78e2746f199d558f8338f61c96 assets/dawd3/models/block/mixer.json
+012ae6bec3490e1e4f4b8a4677ce46600e1a501c assets/dawd3/models/block/mixer.json
 0812a674d14cfc6fbb7c0e2ac1b473bf2afe1965 assets/dawd3/models/item/brown_patch_cable.json
 6e01a1aa07f3a36d7950a1b00d1bc6e9045b9995 assets/dawd3/blockstates/knob.json
 bf0e322e33123cb6873c2da4e8c6ab85688deb4e assets/dawd3/models/item/gray_patch_cable.json
@@ -40,12 +40,12 @@ f7b47538f17992177e97e06842c0039ae5096b2b assets/dawd3/blockstates/speaker.json
 0d899dc2bd693c95d582231a00faf40bf1d67a47 assets/dawd3/blockstates/saw_oscillator.json
 8c4b8147bfea2bdb8c1d348bc332a60d2cd82d68 assets/dawd3/models/item/phase.json
 8aa966337109315240614d5257eb72f959eba5d8 assets/dawd3/models/item/orange_patch_cable.json
-46e362f3f96c54438c29132f76441e6cddb94564 assets/dawd3/models/block/pulse_oscillator.json
+0b8f2a8c456a65c5dd415fc6ad3459dd8b43f954 assets/dawd3/models/block/pulse_oscillator.json
 12c4bfd825b2476955afcd3bb23c1f736ce68caa assets/dawd3/models/item/yellow_patch_cable.json
 aab1bce7ec4e7c7dccd3d33d4242de12b63a981d assets/dawd3/models/item/white_patch_cable.json
 6cdda36e539e23acf3db70d761338e88932a6ebb assets/dawd3/models/item/purple_patch_cable.json
 e3c6aacd49a6395f37047d3df31f91a18a411267 assets/dawd3/models/item/speaker.json
-49d732a11ba0d66d716dcb6d86718075b6ccf5aa assets/dawd3/models/block/keyboard.json
+4be49e87d036188e4c9d5285d7fcebbb25954dfe assets/dawd3/models/block/keyboard.json
 2adb4f854a9f13090dffaf8ab9dfe0553cc59a80 assets/dawd3/models/item/triangle_oscillator.json
 3b1811bab3ba394ba03b67ac2efc72cb35316dc8 assets/dawd3/blockstates/sine_oscillator.json
 8688de3eadb6579cac89522683c394f18733e614 assets/dawd3/models/block/knob.json
