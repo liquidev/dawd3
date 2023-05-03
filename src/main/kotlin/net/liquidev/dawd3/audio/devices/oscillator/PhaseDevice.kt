@@ -39,7 +39,6 @@ class PhaseDevice : Device<NoControls> {
             phase %= 1f
 
             if (resetTrigger.stepEdge(resetBuffer[i]) == Trigger.Edge.Rising) {
-                println("resetting phase")
                 phase = 0f
             }
 

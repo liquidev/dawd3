@@ -11,9 +11,11 @@ import net.liquidev.dawd3.block.device.DeviceBlock
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.block.device.DeviceBlockEntityRenderer
 import net.liquidev.dawd3.block.devices.SpeakerBlockDescriptor
+import net.liquidev.dawd3.block.devices.envelope.AdsrBlockDescriptor
 import net.liquidev.dawd3.block.devices.io.KeyboardBlockDescriptor
 import net.liquidev.dawd3.block.devices.io.KnobBlockDescriptor
 import net.liquidev.dawd3.block.devices.math.AmplifierBlockDescriptor
+import net.liquidev.dawd3.block.devices.math.MixerBlockDescriptor
 import net.liquidev.dawd3.block.devices.math.ModulatorBlockDescriptor
 import net.liquidev.dawd3.block.devices.oscillator.*
 import net.liquidev.dawd3.item.Items
@@ -68,12 +70,15 @@ object Blocks {
     val keyboard = registerDeviceBlock(KeyboardBlockDescriptor)
     val amplifier = registerDeviceBlock(AmplifierBlockDescriptor)
     val modulator = registerDeviceBlock(ModulatorBlockDescriptor)
+    val mixer = registerDeviceBlock(MixerBlockDescriptor)
 
     val phase = registerDeviceBlock(PhaseBlockDescriptor)
     val sineOscillator = registerDeviceBlock(SineOscillatorBlockDescriptor)
     val pulseOscillator = registerDeviceBlock(PulseOscillatorBlockDescriptor)
     val sawOscillator = registerDeviceBlock(SawOscillatorBlockDescriptor)
     val triangleOscillator = registerDeviceBlock(TriangleOscillatorBlockDescriptor)
+
+    val adsr = registerDeviceBlock(AdsrBlockDescriptor)
 
     fun initialize() {}
 

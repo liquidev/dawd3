@@ -16,9 +16,11 @@
   "item.dawd3.green_patch_cable": "Green Patch Cable",
   "item.dawd3.red_patch_cable": "Red Patch Cable",
   "item.dawd3.black_patch_cable": "Black Patch Cable",
+  "block.dawd3.adsr": "ADSR",
   "block.dawd3.amplifier": "Amplifier",
   "block.dawd3.keyboard": "Keyboard",
   "block.dawd3.knob": "Knob",
+  "block.dawd3.mixer": "Mixer",
   "block.dawd3.modulator": "Modulator",
   "block.dawd3.phase": "Phase",
   "block.dawd3.pulse_oscillator": "Pulse Oscillator",
@@ -27,9 +29,15 @@
   "block.dawd3.sine_oscillator": "Sine Oscillator",
   "block.dawd3.triangle_oscillator": "Triangle Oscillator",
   "screen.dawd3.rack.title": "Rack",
+  "dawd3.control.dawd3.adsr.attack": "ATT",
+  "dawd3.control.dawd3.adsr.decay": "DEC",
+  "dawd3.control.dawd3.adsr.sustain": "SUS",
+  "dawd3.control.dawd3.adsr.release": "REL",
   "dawd3.control.dawd3.amplifier.amplitude": "AMP",
   "dawd3.control.dawd3.amplifier.amplitude_cv": "CV",
   "dawd3.control.dawd3.constant.value": "",
   "dawd3.control.dawd3.fma.add": "ADD",
-  "dawd3.control.dawd3.fma.multiply": "MUL"
+  "dawd3.control.dawd3.fma.multiply": "MUL",
+  "dawd3.control.dawd3.mix.a_amplitude": "A",
+  "dawd3.control.dawd3.mix.b_amplitude": "B"
 }

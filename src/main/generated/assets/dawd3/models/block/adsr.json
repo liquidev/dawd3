@@ -46,54 +46,6 @@
           "cullface": "north",
           "texture": "#port",
           "uv": [
-            0.0,
-            0.0,
-            4.0,
-            4.0
-          ]
-        }
-      },
-      "from": [
-        9.0,
-        9.0,
-        -0.01
-      ],
-      "to": [
-        13.0,
-        13.0,
-        0.01
-      ]
-    },
-    {
-      "faces": {
-        "north": {
-          "cullface": "north",
-          "texture": "#port",
-          "uv": [
-            0.0,
-            0.0,
-            4.0,
-            4.0
-          ]
-        }
-      },
-      "from": [
-        9.0,
-        3.0,
-        -0.01
-      ],
-      "to": [
-        13.0,
-        7.0,
-        0.01
-      ]
-    },
-    {
-      "faces": {
-        "north": {
-          "cullface": "north",
-          "texture": "#port",
-          "uv": [
             4.0,
             0.0,
             8.0,
@@ -111,16 +63,40 @@
         10.0,
         0.01
       ]
+    },
+    {
+      "faces": {
+        "north": {
+          "cullface": "north",
+          "texture": "#port",
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            4.0
+          ]
+        }
+      },
+      "from": [
+        9.0,
+        6.0,
+        -0.01
+      ],
+      "to": [
+        13.0,
+        10.0,
+        0.01
+      ]
     }
   ],
   "textures": {
-    "back": "dawd3:block/phase_side",
-    "bottom": "dawd3:block/phase_side",
-    "front": "dawd3:block/phase_front",
-    "left": "dawd3:block/phase_side",
-    "particle": "dawd3:block/phase_side",
+    "back": "dawd3:block/adsr_side",
+    "bottom": "dawd3:block/adsr_side",
+    "front": "dawd3:block/adsr_front",
+    "left": "dawd3:block/adsr_side",
+    "particle": "dawd3:block/adsr_side",
     "port": "dawd3:device/port",
-    "right": "dawd3:block/phase_side",
-    "top": "dawd3:block/phase_side"
+    "right": "dawd3:block/adsr_side",
+    "top": "dawd3:block/adsr_side"
   }
 }
