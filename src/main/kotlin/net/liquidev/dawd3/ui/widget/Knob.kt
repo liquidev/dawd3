@@ -10,15 +10,16 @@ import net.liquidev.dawd3.net.ControlTweaked
 import net.liquidev.dawd3.net.TweakControl
 import net.liquidev.dawd3.render.Render
 import net.liquidev.dawd3.render.TextureStrip
+import net.liquidev.dawd3.render.Tooltip
 import net.liquidev.dawd3.ui.*
+import net.liquidev.dawd3.ui.units.FloatUnit
+import net.liquidev.dawd3.ui.units.RawValue
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.InputUtil
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.text.Text
 import org.lwjgl.glfw.GLFW
-import kotlin.math.cos
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.sin
+import kotlin.math.*
 
 class Knob(
     x: Int,
@@ -27,15 +28,19 @@ class Knob(
     val min: Float,
     val max: Float,
     val color: Color,
+    val unit: FloatUnit = RawValue,
     // Pick a default sensitivity such that for pitch ranges we move by steps of 0.25.
     val sensitivity: Float = (max - min) * 0.25f / 96f,
 ) : Widget(x, y) {
     override val width = 20
-    override val height = 20
+    override val height = 24
 
     private data class DraggingInfo(var previousMouseY: Double)
 
     private var draggingInfo: DraggingInfo? = null
+
+    private val controlLabel =
+        Text.translatable(control.descriptor.name.toTranslationKey()).setStyle(Rack.smallText)
 
     override fun drawContent(matrices: MatrixStack, mouseX: Int, mouseY: Int, deltaTime: Float) {
         val centerX = width.toFloat() / 2
@@ -83,6 +88,25 @@ class Knob(
             Rack.atlas,
             blackStrip
         )
+
+        Render.textCentered(
+            matrices,
+            centerX.roundToInt() + 1,
+            height - 5,
+            controlLabel,
+            0x111111
+        )
+
+        if (draggingInfo != null) {
+            Render.tooltipCentered(
+                matrices,
+                centerX.toInt(),
+                height - 4,
+                Text.literal(unit.display(control.value)),
+                Rack.atlas,
+                Tooltip.dark
+            )
+        }
     }
 
     override fun event(context: EventContext, event: Event): Event? {

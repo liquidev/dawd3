@@ -290,6 +290,22 @@ object Render {
         )
     }
 
+    fun textWidth(text: Text): Int {
+        val textRenderer = MinecraftClient.getInstance().textRenderer
+        return textRenderer.getWidth(text)
+    }
+
+    fun text(matrices: MatrixStack, x: Int, y: Int, text: Text, color: Int) {
+        val textRenderer = MinecraftClient.getInstance().textRenderer
+        textRenderer.draw(
+            matrices,
+            text,
+            x.toFloat(),
+            y.toFloat(),
+            color
+        )
+    }
+
     fun textCentered(matrices: MatrixStack, centerX: Int, y: Int, text: Text, color: Int) {
         val textRenderer = MinecraftClient.getInstance().textRenderer
         val textWidth = textRenderer.getWidth(text)
@@ -301,5 +317,33 @@ object Render {
             y.toFloat(),
             color
         )
+    }
+
+    fun tooltipWidth(text: Text): Int = textWidth(text) + 5
+
+    fun tooltip(
+        matrices: MatrixStack,
+        x: Int,
+        y: Int,
+        text: Text,
+        atlas: Atlas,
+        tooltip: Tooltip,
+    ) {
+        val width = tooltipWidth(text)
+        ninePatch(matrices, x, y, width, height = 14, atlas, tooltip.ninePatch)
+        text(matrices, x + 3, y + 3, text, tooltip.textColor)
+    }
+
+    fun tooltipCentered(
+        matrices: MatrixStack,
+        centerX: Int,
+        y: Int,
+        text: Text,
+        atlas: Atlas,
+        tooltip: Tooltip,
+    ) {
+        val width = tooltipWidth(text)
+        val x = centerX - width / 2
+        tooltip(matrices, x, y, text, atlas, tooltip)
     }
 }

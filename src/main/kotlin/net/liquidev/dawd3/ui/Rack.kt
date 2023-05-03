@@ -9,6 +9,7 @@ import net.liquidev.dawd3.ui.widget.Widget
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.client.world.ClientWorld
+import net.minecraft.text.Style
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -96,6 +97,9 @@ class Rack(
     companion object {
         val atlas = Atlas(asset = Identifier(Mod.id, "textures/ui/rack.png"), size = 64)
         val badge = Icon(u = 0, v = 16, width = 6, height = 3)
+
+        val smallFont = Identifier(Mod.id, "altopixel")
+        val smallText = Style.EMPTY.withFont(smallFont)!!
 
         // TODO: This "adjacent device" system is kind of janky but it allows for pretty nice
         //  organization of your devices into multiple racks of sorts. Maybe in the future we can

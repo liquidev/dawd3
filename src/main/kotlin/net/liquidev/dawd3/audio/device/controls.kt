@@ -15,6 +15,12 @@ class ControlName(parent: Identifier, name: String) {
 
     override fun toString() = id.toString()
 
+    fun toTranslationKey(): String {
+        val namespace = id.namespace
+        val key = id.path.replace('/', '.')
+        return "dawd3.control.${namespace}.${key}"
+    }
+
     companion object {
         private val registry = hashMapOf<Identifier, ControlName>()
 

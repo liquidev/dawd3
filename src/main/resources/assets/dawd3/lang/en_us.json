@@ -25,5 +25,10 @@
   "block.dawd3.saw_oscillator": "Saw Oscillator",
   "block.dawd3.sine_oscillator": "Sine Oscillator",
   "block.dawd3.triangle_oscillator": "Triangle Oscillator",
-  "screen.dawd3.rack.title": "Rack"
+  "screen.dawd3.rack.title": "Rack",
+  "dawd3.control.dawd3.amplifier.amplitude": "AMP",
+  "dawd3.control.dawd3.amplifier.amplitude_cv": "CV",
+  "dawd3.control.dawd3.constant.value": "",
+  "dawd3.control.dawd3.fma.add": "ADD",
+  "dawd3.control.dawd3.fma.multiply": "MUL"
 }

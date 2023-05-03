@@ -21,7 +21,7 @@ abstract class Widget(var x: Int, var y: Int) {
     fun draw(matrices: MatrixStack, mouseX: Int, mouseY: Int, deltaTime: Float) {
         matrices.push()
         matrices.translate(x.toDouble(), y.toDouble(), 0.0)
-        drawContent(matrices, mouseX, mouseY, deltaTime)
+        drawContent(matrices, mouseX - x, mouseY - y, deltaTime)
         matrices.pop()
     }
 

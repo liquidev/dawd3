@@ -5,6 +5,8 @@ import net.liquidev.dawd3.audio.device.DeviceInstance
 import net.liquidev.dawd3.audio.devices.math.AmplifierDevice
 import net.liquidev.dawd3.block.device.DeviceBlockDescriptor
 import net.liquidev.dawd3.block.device.PhysicalPort
+import net.liquidev.dawd3.ui.units.AmplitudeValue
+import net.liquidev.dawd3.ui.units.PercentageValue
 import net.liquidev.dawd3.ui.widget.Knob
 import net.liquidev.dawd3.ui.widget.Widget
 import net.liquidev.dawd3.ui.widget.Window
@@ -59,6 +61,7 @@ object AmplifierBlockDescriptor : DeviceBlockDescriptor<AmplifierBlockDescriptor
                         min = 0f,
                         max = 1f,
                         color = Knob.Color.Red,
+                        unit = AmplitudeValue,
                     )
                 )
                 children.add(
@@ -69,6 +72,7 @@ object AmplifierBlockDescriptor : DeviceBlockDescriptor<AmplifierBlockDescriptor
                         min = -8f,
                         max = 8f,
                         color = Knob.Color.Blue,
+                        unit = PercentageValue,
                     )
                 )
             }
