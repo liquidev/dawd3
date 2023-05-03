@@ -3,8 +3,8 @@ package net.liquidev.dawd3.ui
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.render.Atlas
-import net.liquidev.dawd3.render.Icon
 import net.liquidev.dawd3.render.Render
+import net.liquidev.dawd3.render.Sprite
 import net.liquidev.dawd3.ui.widget.Widget
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.util.math.MatrixStack
@@ -52,18 +52,19 @@ class Rack(
             openWidget.widget.draw(matrices, mouseX, mouseY, delta)
         }
 
-        Render.icon(matrices, 8, 8, badge.width * 2, badge.height * 2, atlas, badge)
+        Render.sprite(matrices, 8, 8, badge.width * 2, badge.height * 2, atlas, badge)
     }
 
     private fun propagateEvent(event: Event): Boolean {
         for (openWidget in openWidgets) {
-            if (openWidget.widget.event(
+            if (
+                openWidget.widget.event(
                     EventContext(world, openWidget.blockPosition),
                     event.relativeTo(
                         openWidget.widget.x.toDouble(),
                         openWidget.widget.y.toDouble(),
                     )
-                ) == null
+                )
             ) return true
         }
         return false
@@ -96,7 +97,7 @@ class Rack(
 
     companion object {
         val atlas = Atlas(asset = Identifier(Mod.id, "textures/ui/rack.png"), size = 64)
-        val badge = Icon(u = 0, v = 16, width = 6, height = 3)
+        val badge = Sprite(u = 0, v = 16, width = 6, height = 3)
 
         val smallFont = Identifier(Mod.id, "altopixel")
         val smallText = Style.EMPTY.withFont(smallFont)!!

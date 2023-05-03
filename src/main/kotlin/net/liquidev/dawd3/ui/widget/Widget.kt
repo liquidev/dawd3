@@ -15,8 +15,8 @@ abstract class Widget(var x: Int, var y: Int) {
         deltaTime: Float,
     )
 
-    /** Returns non-null to propagate the event, or null to consume it. */
-    abstract fun event(context: EventContext, event: Event): Event?
+    /** Returns false to propagate the event, or true to consume it. */
+    abstract fun event(context: EventContext, event: Event): Boolean
 
     fun draw(matrices: MatrixStack, mouseX: Int, mouseY: Int, deltaTime: Float) {
         matrices.push()
@@ -36,10 +36,11 @@ abstract class Widget(var x: Int, var y: Int) {
             through: Iterable<Widget>,
         ): Boolean {
             for (widget in through) {
-                if (widget.event(
+                if (
+                    widget.event(
                         context,
                         event.relativeTo(widget.x.toDouble(), widget.y.toDouble())
-                    ) == null
+                    )
                 ) {
                     return true
                 }

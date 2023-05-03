@@ -11,8 +11,9 @@ import net.liquidev.dawd3.block.device.DeviceBlock
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.block.device.DeviceBlockEntityRenderer
 import net.liquidev.dawd3.block.devices.SpeakerBlockDescriptor
+import net.liquidev.dawd3.block.devices.io.KeyboardBlockDescriptor
+import net.liquidev.dawd3.block.devices.io.KnobBlockDescriptor
 import net.liquidev.dawd3.block.devices.math.AmplifierBlockDescriptor
-import net.liquidev.dawd3.block.devices.math.KnobBlockDescriptor
 import net.liquidev.dawd3.block.devices.math.ModulatorBlockDescriptor
 import net.liquidev.dawd3.block.devices.oscillator.*
 import net.liquidev.dawd3.item.Items
@@ -64,6 +65,7 @@ object Blocks {
     val speaker = registerDeviceBlock(SpeakerBlockDescriptor)
 
     val knob = registerDeviceBlock(KnobBlockDescriptor)
+    val keyboard = registerDeviceBlock(KeyboardBlockDescriptor)
     val amplifier = registerDeviceBlock(AmplifierBlockDescriptor)
     val modulator = registerDeviceBlock(ModulatorBlockDescriptor)
 

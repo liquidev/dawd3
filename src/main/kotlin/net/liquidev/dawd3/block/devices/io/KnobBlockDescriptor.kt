@@ -1,8 +1,8 @@
-package net.liquidev.dawd3.block.devices.math
+package net.liquidev.dawd3.block.devices.io
 
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.DeviceInstance
-import net.liquidev.dawd3.audio.devices.math.ConstantDevice
+import net.liquidev.dawd3.audio.devices.io.ConstantDevice
 import net.liquidev.dawd3.block.device.DeviceBlockDescriptor
 import net.liquidev.dawd3.block.device.PhysicalPort
 import net.liquidev.dawd3.block.device.descriptor.FaceTextures

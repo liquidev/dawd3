@@ -2,6 +2,9 @@ package net.liquidev.dawd3.audio.devices.oscillator
 
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.audio.device.*
+import net.liquidev.dawd3.audio.math.PhaseDerivative
+import net.liquidev.dawd3.audio.math.oversample
+import net.liquidev.dawd3.audio.math.polyBLEP
 import net.minecraft.util.Identifier
 import kotlin.math.abs
 

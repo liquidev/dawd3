@@ -17,14 +17,14 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 object Render {
-    fun icon(
+    fun sprite(
         matrices: MatrixStack,
         x: Int,
         y: Int,
         width: Int,
         height: Int,
         atlas: Atlas,
-        icon: Icon,
+        sprite: Sprite,
     ) {
         RenderSystem.setShaderTexture(0, atlas.asset)
         DrawableHelper.drawTexture(
@@ -33,17 +33,17 @@ object Render {
             y,
             width,
             height,
-            icon.u.toFloat(),
-            icon.v.toFloat(),
-            icon.width,
-            icon.height,
+            sprite.u.toFloat(),
+            sprite.v.toFloat(),
+            sprite.width,
+            sprite.height,
             atlas.size,
             atlas.size
         )
     }
 
-    fun icon(matrices: MatrixStack, x: Int, y: Int, atlas: Atlas, icon: Icon) {
-        icon(matrices, x, y, icon.width, icon.height, atlas, icon)
+    fun sprite(matrices: MatrixStack, x: Int, y: Int, atlas: Atlas, icon: Sprite) {
+        sprite(matrices, x, y, icon.width, icon.height, atlas, icon)
     }
 
     fun line(

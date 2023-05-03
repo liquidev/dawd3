@@ -1,13 +1,13 @@
 package net.liquidev.dawd3.ui.widget
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.liquidev.dawd3.audio.device.BlockEntityControls
 import net.liquidev.dawd3.audio.device.FloatControl
 import net.liquidev.dawd3.common.Degrees
 import net.liquidev.dawd3.common.Radians
 import net.liquidev.dawd3.common.clamp
 import net.liquidev.dawd3.common.mapRange
 import net.liquidev.dawd3.net.ControlTweaked
-import net.liquidev.dawd3.net.TweakControl
 import net.liquidev.dawd3.render.Render
 import net.liquidev.dawd3.render.TextureStrip
 import net.liquidev.dawd3.render.Tooltip
@@ -28,12 +28,13 @@ class Knob(
     val min: Float,
     val max: Float,
     val color: Color,
+    size: Int = normalSize,
     val unit: FloatUnit = RawValue,
     // Pick a default sensitivity such that for pitch ranges we move by steps of 0.25.
     val sensitivity: Float = (max - min) * 0.25f / 96f,
 ) : Widget(x, y) {
-    override val width = 20
-    override val height = 24
+    override val width = size
+    override val height = size + 4
 
     private data class DraggingInfo(var previousMouseY: Double)
 
@@ -109,7 +110,7 @@ class Knob(
         }
     }
 
-    override fun event(context: EventContext, event: Event): Event? {
+    override fun event(context: EventContext, event: Event): Boolean {
         val client = MinecraftClient.getInstance()
         when (event) {
             is MouseButton -> if (event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
@@ -129,7 +130,7 @@ class Knob(
                             event.absoluteMouseX * guiScale,
                             event.absoluteMouseY * guiScale,
                         )
-                        return null
+                        return true
                     }
                     Action.Up -> {
                         val draggingInfo = draggingInfo
@@ -154,22 +155,17 @@ class Knob(
                 if (draggingInfo != null) {
                     val guiScale = client.options.guiScale.value.toFloat()
                     val deltaY = (draggingInfo.previousMouseY - event.absoluteMouseY) * guiScale
-                    // Reflect the change locally immediately for lower latency.
-                    control.value = alterValue(control.value, by = deltaY.toFloat())
-                    ClientPlayNetworking.send(
-                        TweakControl.id,
-                        TweakControl(
-                            context.blockPosition,
-                            control.descriptor.name.id,
-                            control.valueToBytes()
-                        ).serialize()
+                    BlockEntityControls.setFloatControlValue(
+                        context.blockPosition,
+                        control,
+                        alterValue(control.value, by = deltaY.toFloat())
                     )
                     draggingInfo.previousMouseY = event.absoluteMouseY
                 }
             }
         }
 
-        return event
+        return false
     }
 
     private fun alterValue(value: Float, by: Float): Float =
@@ -195,5 +191,8 @@ class Knob(
             val u = 18f + color.index.toFloat()
             return TextureStrip(u, 16f, u, 32f)
         }
+
+        const val normalSize = 20
+        const val smallSize = 16
     }
 }

@@ -1,8 +1,11 @@
 package net.liquidev.dawd3.audio.device
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.liquidev.dawd3.net.TweakControl
 import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtFloat
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -84,4 +87,18 @@ class ControlMap(set: ControlSet) {
     }
 
     operator fun get(name: ControlName): Control? = map[name]
+}
+
+object BlockEntityControls {
+    fun setFloatControlValue(blockPosition: BlockPos, control: FloatControl, value: Float) {
+        control.value = value
+        ClientPlayNetworking.send(
+            TweakControl.id,
+            TweakControl(
+                blockPosition,
+                control.descriptor.name.id,
+                control.valueToBytes()
+            ).serialize()
+        )
+    }
 }

@@ -1,4 +1,4 @@
-package net.liquidev.dawd3.audio.devices.oscillator
+package net.liquidev.dawd3.audio.math
 
 inline fun oversample(
     phase: Float,
