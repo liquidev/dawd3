@@ -46,21 +46,21 @@
           "cullface": "north",
           "texture": "#port",
           "uv": [
-            4.0,
             0.0,
-            8.0,
+            0.0,
+            4.0,
             4.0
           ]
         }
       },
       "from": [
-        3.0,
-        6.0,
+        9.0,
+        9.0,
         -0.01
       ],
       "to": [
-        7.0,
-        10.0,
+        13.0,
+        13.0,
         0.01
       ]
     },
@@ -78,13 +78,37 @@
         }
       },
       "from": [
-        9.0,
+        3.0,
         9.0,
         -0.01
       ],
       "to": [
+        7.0,
         13.0,
-        13.0,
+        0.01
+      ]
+    },
+    {
+      "faces": {
+        "north": {
+          "cullface": "north",
+          "texture": "#port",
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            4.0
+          ]
+        }
+      },
+      "from": [
+        3.0,
+        3.0,
+        -0.01
+      ],
+      "to": [
+        7.0,
+        7.0,
         0.01
       ]
     },
@@ -114,13 +138,13 @@
     }
   ],
   "textures": {
-    "back": "dawd3:block/pulse_oscillator_side",
-    "bottom": "dawd3:block/pulse_oscillator_side",
-    "front": "dawd3:block/pulse_oscillator_front",
-    "left": "dawd3:block/pulse_oscillator_side",
-    "particle": "dawd3:block/pulse_oscillator_side",
+    "back": "dawd3:block/biquad_low_pass_side",
+    "bottom": "dawd3:block/biquad_low_pass_side",
+    "front": "dawd3:block/biquad_low_pass_front",
+    "left": "dawd3:block/biquad_low_pass_side",
+    "particle": "dawd3:block/biquad_low_pass_side",
     "port": "dawd3:device/port",
-    "right": "dawd3:block/pulse_oscillator_side",
-    "top": "dawd3:block/pulse_oscillator_side"
+    "right": "dawd3:block/biquad_low_pass_side",
+    "top": "dawd3:block/biquad_low_pass_side"
   }
 }

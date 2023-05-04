@@ -1,6 +1,7 @@
 package net.liquidev.dawd3.ui.units
 
 import net.liquidev.dawd3.audio.unit.Amplitude
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 interface FloatUnit {
@@ -29,24 +30,26 @@ object PercentageValue : FloatUnit {
 
 class SiValue(val unit: String) : FloatUnit {
     override fun display(value: Float): String {
+        val abs = abs(value)
         val divided: Float =
-            if (value > 1_000_000_000_000) value / 1_000_000_000_000
-            else if (value > 1_000_000_000) value / 1_000_000_000
-            else if (value > 1_000_000) value / 1_000_000
-            else if (value > 1_000) value / 1_000
-            else if (value < 1) value * 1_000
+            if (abs >= 1_000_000_000_000) value / 1_000_000_000_000
+            else if (abs >= 1_000_000_000) value / 1_000_000_000
+            else if (abs >= 1_000_000) value / 1_000_000
+            else if (abs >= 1_000) value / 1_000
+            else if (abs < 1) value * 1_000
             else value
         val prefix =
-            if (value > 1_000_000_000_000) "T"
-            else if (value > 1_000_000_000) "G"
-            else if (value > 1_000_000) "M"
-            else if (value > 1_000) "k"
-            else if (value < 1) "m"
+            if (abs >= 1_000_000_000_000) "T"
+            else if (abs >= 1_000_000_000) "G"
+            else if (abs >= 1_000_000) "M"
+            else if (abs >= 1_000) "k"
+            else if (abs < 1) "m"
             else ""
         return String.format("%.01f %s%s", divided, prefix, unit)
     }
 
     companion object {
         val time = SiValue("s")
+        val frequency = SiValue("Hz")
     }
 }

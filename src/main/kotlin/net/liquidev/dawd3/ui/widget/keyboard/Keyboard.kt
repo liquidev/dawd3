@@ -25,9 +25,9 @@ class Keyboard(
                     whiteX += keyType.width - 1
                     xx
                 }
-                Key.Type.Black -> whiteX - keyType.width / 2 - 1
+                Key.Type.Black -> whiteX - keyType.width / 2
             }
-            Key(keyX, y = 0, keyType, note.toFloat(), controls)
+            Key(keyX, y = 0, keyType, note.toFloat(), controls.pitch)
             // We want black keys to render after white keys.
         }.sortedBy { it.type }
     }

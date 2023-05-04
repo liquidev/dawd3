@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "dawd3:block/biquad_notch",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "dawd3:block/biquad_notch"
+    },
+    "facing=south": {
+      "model": "dawd3:block/biquad_notch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "dawd3:block/biquad_notch",
+      "y": 270
+    }
+  }
+}

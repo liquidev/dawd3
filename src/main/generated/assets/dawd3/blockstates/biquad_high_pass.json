@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "dawd3:block/biquad_high_pass",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "dawd3:block/biquad_high_pass"
+    },
+    "facing=south": {
+      "model": "dawd3:block/biquad_high_pass",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "dawd3:block/biquad_high_pass",
+      "y": 270
+    }
+  }
+}
