@@ -39,12 +39,12 @@ object KnobBlockDescriptor : DeviceBlockDescriptor<KnobBlockDescriptor.ClientSta
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<ConstantDevice.Controls> {
-        override fun open(controls: ConstantDevice.Controls, x: Int, y: Int): Widget =
-            Window(x, y, 48, 48, Text.translatable("block.dawd3.knob")).apply {
+        override fun open(controls: ConstantDevice.Controls, x: Float, y: Float): Widget =
+            Window(x, y, 48f, 48f, Text.translatable("block.dawd3.knob")).apply {
                 children.add(
                     Knob(
-                        x = 14,
-                        y = 18,
+                        x = 14f,
+                        y = 18f,
                         control = controls.value,
                         min = -48f,
                         max = 48f,

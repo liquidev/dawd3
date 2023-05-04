@@ -13,6 +13,7 @@ import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtHelper
 import net.minecraft.nbt.NbtList
 import net.minecraft.util.math.BlockPos
+import java.util.*
 
 private typealias DeviceBlockFactory = FabricBlockEntityTypeBuilder.Factory<DeviceBlockEntity>
 
@@ -41,6 +42,15 @@ class DeviceBlockEntity(
      */
     internal val outputConnections = hashMapOf<OutputPortName, BlockPos>()
 
+    /**
+     * UI shelf the block's control panel is seated on.
+     *
+     * This only applies to devices with control panels; other devices always have this set to null.
+     * For devices with control panels which do have this set to null, this means the device doesn't
+     * have a shelf assigned and should be placed on the sidebar.
+     */
+    var shelf: UUID? = null
+
     /** NBT compound keys. */
     private object Nbt {
         const val controls = "controls"
@@ -60,6 +70,8 @@ class DeviceBlockEntity(
             const val port = "port"
             const val block = "block"
         }
+
+        const val shelf = "shelf"
     }
 
     override fun readNbt(nbt: NbtCompound) {
@@ -117,6 +129,10 @@ class DeviceBlockEntity(
                 NbtHelper.toBlockPos(connectionNbt.getCompound(Nbt.OutputConnection.block))
 
             outputConnections[port] = blockPosition
+        }
+
+        if (nbt.containsUuid(Nbt.shelf)) {
+            shelf = nbt.getUuid(Nbt.shelf)
         }
     }
 

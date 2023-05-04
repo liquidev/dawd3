@@ -43,12 +43,12 @@ object ModulatorBlockDescriptor : DeviceBlockDescriptor<ModulatorBlockDescriptor
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<FmaDevice.Controls> {
-        override fun open(controls: FmaDevice.Controls, x: Int, y: Int): Widget =
-            Window(x, y, 78, 48, Text.translatable("block.dawd3.modulator")).apply {
+        override fun open(controls: FmaDevice.Controls, x: Float, y: Float): Widget =
+            Window(x, y, 78f, 48f, Text.translatable("block.dawd3.modulator")).apply {
                 children.add(
                     Knob(
-                        x = 14,
-                        y = 18,
+                        x = 14f,
+                        y = 18f,
                         control = controls.add,
                         min = -48f,
                         max = 48f,
@@ -57,8 +57,8 @@ object ModulatorBlockDescriptor : DeviceBlockDescriptor<ModulatorBlockDescriptor
                 )
                 children.add(
                     Knob(
-                        x = 42,
-                        y = 18,
+                        x = 42f,
+                        y = 18f,
                         control = controls.multiply,
                         min = -8f,
                         max = 8f,

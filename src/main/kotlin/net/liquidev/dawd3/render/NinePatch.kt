@@ -1,16 +1,16 @@
 package net.liquidev.dawd3.render
 
 data class NinePatch(
-    val u: Int,
-    val v: Int,
-    val width: Int,
-    val height: Int,
-    val borderTop: Int,
-    val borderBottom: Int,
-    val borderLeft: Int,
-    val borderRight: Int,
+    val u: Float,
+    val v: Float,
+    val width: Float,
+    val height: Float,
+    val borderTop: Float,
+    val borderBottom: Float,
+    val borderLeft: Float,
+    val borderRight: Float,
 ) {
-    constructor(u: Int, v: Int, width: Int, height: Int, border: Int) : this(
+    constructor(u: Float, v: Float, width: Float, height: Float, border: Float) : this(
         u,
         v,
         width,

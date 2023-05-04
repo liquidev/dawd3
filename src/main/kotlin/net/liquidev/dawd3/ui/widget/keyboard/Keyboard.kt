@@ -7,27 +7,27 @@ import net.liquidev.dawd3.ui.widget.Container
 import org.lwjgl.glfw.GLFW
 
 class Keyboard(
-    x: Int,
-    y: Int,
+    x: Float,
+    y: Float,
     firstNote: Int,
     lastNote: Int,
     private val controls: KeyboardDevice.Controls,
 ) : Container(x, y) {
 
     override val children = run {
-        var whiteX = 0
+        var whiteX = 0f
         List(lastNote - firstNote) { index ->
             val note = firstNote + index
             val keyType = octave[note.mod(octave.size)]
             val keyX = when (keyType) {
                 Key.Type.White -> {
                     val xx = whiteX
-                    whiteX += keyType.width - 1
+                    whiteX += keyType.width - 1f
                     xx
                 }
                 Key.Type.Black -> whiteX - keyType.width / 2
             }
-            Key(keyX, y = 0, keyType, note.toFloat(), controls.pitch)
+            Key(keyX, y = 0f, keyType, note.toFloat(), controls.pitch)
             // We want black keys to render after white keys.
         }.sortedBy { it.type }
     }
@@ -40,8 +40,8 @@ class Keyboard(
     override fun event(context: EventContext, event: Event): Boolean {
         if (event is MouseButton && event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             mouseIsDown = event.action == Action.Down && containsRelativePoint(
-                event.mouseX.toInt(),
-                event.mouseY.toInt()
+                event.mouseX,
+                event.mouseY
             )
             if (mouseIsDown) {
                 setPressedKey(context, findPressedKey(event.mouseX.toInt(), event.mouseY.toInt()))

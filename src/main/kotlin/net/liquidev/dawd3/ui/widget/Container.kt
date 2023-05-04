@@ -4,10 +4,15 @@ import net.liquidev.dawd3.ui.Event
 import net.liquidev.dawd3.ui.EventContext
 import net.minecraft.client.util.math.MatrixStack
 
-abstract class Container(x: Int, y: Int) : Widget(x, y) {
+abstract class Container(x: Float, y: Float) : Widget(x, y) {
     abstract val children: List<Widget>
 
-    override fun drawContent(matrices: MatrixStack, mouseX: Int, mouseY: Int, deltaTime: Float) {
+    override fun drawContent(
+        matrices: MatrixStack,
+        mouseX: Float,
+        mouseY: Float,
+        deltaTime: Float,
+    ) {
         for (child in children) {
             child.draw(matrices, mouseX, mouseY, deltaTime)
         }

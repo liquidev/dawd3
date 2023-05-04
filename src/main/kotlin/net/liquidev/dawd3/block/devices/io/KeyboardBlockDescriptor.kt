@@ -31,14 +31,14 @@ object KeyboardBlockDescriptor : DeviceBlockDescriptor<KeyboardBlockDescriptor.C
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<KeyboardDevice.Controls> {
-        override fun open(controls: KeyboardDevice.Controls, x: Int, y: Int) =
+        override fun open(controls: KeyboardDevice.Controls, x: Float, y: Float) =
             Window(
                 x, y,
-                width = 332,
-                height = 56,
+                width = 332f,
+                height = 56f,
                 title = Text.translatable("block.dawd3.keyboard")
             ).apply {
-                children.add(Keyboard(x = 8, y = 16, firstNote = -33, lastNote = 27, controls))
+                children.add(Keyboard(x = 8f, y = 16f, firstNote = -33, lastNote = 27, controls))
             }
     }
 }

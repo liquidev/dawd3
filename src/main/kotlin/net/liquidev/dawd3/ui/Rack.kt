@@ -30,32 +30,34 @@ class Rack(
         ArrayList(shownDevices.mapNotNull { blockPosition ->
             val blockEntity = world.getBlockEntity(blockPosition) as DeviceBlockEntity
             blockEntity.descriptor.ui
-                ?.open(blockEntity.controls, 0, 0)
+                ?.open(blockEntity.controls, 0f, 0f)
                 ?.let { widget -> OpenWidget(blockPosition, widget) }
         })
 
     private fun layoutWindows() {
-        var x = 16
-        var y = 16
-        var rowHeight = 0
+        var x = 16f
+        var y = 16f
+        var rowHeight = 0f
         for (openWidget in openWidgets) {
             if (x + openWidget.widget.width >= width - 16) {
-                x = 16
-                y += rowHeight + 8
-                rowHeight = 0
+                x = 16f
+                y += rowHeight + 8f
+                rowHeight = 0f
             }
             openWidget.widget.x = x
             openWidget.widget.y = y
-            x += openWidget.widget.width + 8
+            x += openWidget.widget.width + 8f
             rowHeight = max(rowHeight, openWidget.widget.height)
         }
     }
 
     override fun init() {
+        super.init()
         layoutWindows()
     }
 
     override fun resize(client: MinecraftClient?, width: Int, height: Int) {
+        super.resize(client, width, height)
         layoutWindows()
     }
 
@@ -69,12 +71,12 @@ class Rack(
         }
 
         for (openWidget in openWidgets) {
-            openWidget.widget.draw(matrices, mouseX, mouseY, delta)
+            openWidget.widget.draw(matrices, mouseX.toFloat(), mouseY.toFloat(), delta)
         }
 
         Render.sprite(
             matrices,
-            8,
+            8f,
             height - badge.height - 8,
             badge.width * 2,
             badge.height * 2,
@@ -88,10 +90,7 @@ class Rack(
             if (
                 openWidget.widget.event(
                     EventContext(world, openWidget.blockPosition),
-                    event.relativeTo(
-                        openWidget.widget.x.toDouble(),
-                        openWidget.widget.y.toDouble(),
-                    )
+                    event.relativeTo(openWidget.widget.x, openWidget.widget.y)
                 )
             ) return true
         }
@@ -99,14 +98,14 @@ class Rack(
     }
 
     override fun mouseMoved(mouseX: Double, mouseY: Double) {
-        propagateEvent(MouseMove(mouseX, mouseY))
+        propagateEvent(MouseMove(mouseX.toFloat(), mouseY.toFloat()))
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean =
-        propagateEvent(MouseButton(Action.Down, mouseX, mouseY, button))
+        propagateEvent(MouseButton(Action.Down, mouseX.toFloat(), mouseY.toFloat(), button))
 
     override fun mouseReleased(mouseX: Double, mouseY: Double, button: Int): Boolean =
-        propagateEvent(MouseButton(Action.Up, mouseX, mouseY, button))
+        propagateEvent(MouseButton(Action.Up, mouseX.toFloat(), mouseY.toFloat(), button))
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         return if (super.keyPressed(keyCode, scanCode, modifiers)) {
@@ -124,8 +123,8 @@ class Rack(
     override fun shouldPause(): Boolean = false
 
     companion object {
-        val atlas = Atlas(asset = Identifier(Mod.id, "textures/ui/rack.png"), size = 64)
-        val badge = Sprite(u = 0, v = 16, width = 6, height = 3)
+        val atlas = Atlas(asset = Identifier(Mod.id, "textures/ui/rack.png"), size = 64f)
+        val badge = Sprite(u = 0f, v = 16f, width = 6f, height = 3f)
 
         val smallFont = Identifier(Mod.id, "altopixel")
         val smallText = Style.EMPTY.withFont(smallFont)!!

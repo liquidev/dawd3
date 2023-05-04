@@ -7,23 +7,28 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.Text
 
 class Window(
-    x: Int,
-    y: Int,
-    override val width: Int,
-    override val height: Int,
+    x: Float,
+    y: Float,
+    override val width: Float,
+    override val height: Float,
     val title: Text,
 ) : Container(x, y) {
 
     override val children = mutableListOf<Widget>()
 
-    override fun drawContent(matrices: MatrixStack, mouseX: Int, mouseY: Int, deltaTime: Float) {
-        Render.ninePatch(matrices, 2, 2, width, height, Rack.atlas, windowShadow)
-        Render.ninePatch(matrices, 0, 0, width, height, Rack.atlas, windowBackground)
+    override fun drawContent(
+        matrices: MatrixStack,
+        mouseX: Float,
+        mouseY: Float,
+        deltaTime: Float,
+    ) {
+        Render.ninePatch(matrices, 2f, 2f, width, height, Rack.atlas, windowShadow)
+        Render.ninePatch(matrices, 0f, 0f, width, height, Rack.atlas, windowBackground)
 
         Render.textCentered(
             matrices,
             width / 2,
-            4,
+            4f,
             title,
             0x111111
         )
@@ -33,14 +38,14 @@ class Window(
 
     companion object {
         val windowBackground = NinePatch(
-            u = 0, v = 0,
-            width = 16, height = 16,
-            border = 3
+            u = 0f, v = 0f,
+            width = 16f, height = 16f,
+            border = 3f
         )
         val windowShadow = NinePatch(
-            u = 16, v = 0,
-            width = 16, height = 16,
-            border = 3
+            u = 16f, v = 0f,
+            width = 16f, height = 16f,
+            border = 3f
         )
     }
 }

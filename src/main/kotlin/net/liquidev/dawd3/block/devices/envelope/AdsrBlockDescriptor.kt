@@ -32,11 +32,11 @@ object AdsrBlockDescriptor : DeviceBlockDescriptor<AdsrBlockDescriptor.ClientSta
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<AdsrDevice.Controls> {
-        override fun open(controls: AdsrDevice.Controls, x: Int, y: Int) =
-            Window(x, y, width = 121, height = 48, Text.translatable("block.dawd3.adsr")).apply {
+        override fun open(controls: AdsrDevice.Controls, x: Float, y: Float) =
+            Window(x, y, width = 121f, height = 48f, Text.translatable("block.dawd3.adsr")).apply {
                 children.add(
                     Knob(
-                        x = 8, y = 18,
+                        x = 8f, y = 18f,
                         controls.attack,
                         min = 0f, max = 8f,
                         Knob.Color.Yellow,
@@ -45,7 +45,7 @@ object AdsrBlockDescriptor : DeviceBlockDescriptor<AdsrBlockDescriptor.ClientSta
                 )
                 children.add(
                     Knob(
-                        x = 36, y = 18,
+                        x = 36f, y = 18f,
                         controls.decay,
                         min = 0f, max = 8f,
                         Knob.Color.Orange,
@@ -54,7 +54,7 @@ object AdsrBlockDescriptor : DeviceBlockDescriptor<AdsrBlockDescriptor.ClientSta
                 )
                 children.add(
                     Knob(
-                        x = 64, y = 18,
+                        x = 64f, y = 18f,
                         controls.sustain,
                         min = 0f, max = 1f,
                         Knob.Color.Red,
@@ -63,7 +63,7 @@ object AdsrBlockDescriptor : DeviceBlockDescriptor<AdsrBlockDescriptor.ClientSta
                 )
                 children.add(
                     Knob(
-                        x = 92, y = 18,
+                        x = 92f, y = 18f,
                         controls.release,
                         min = 0f, max = 8f,
                         Knob.Color.Purple,

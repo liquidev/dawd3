@@ -52,17 +52,17 @@ class BiquadBlockDescriptor(
         ClientState(type, controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<BiquadDevice.Controls> {
-        override fun open(controls: BiquadDevice.Controls, x: Int, y: Int) =
+        override fun open(controls: BiquadDevice.Controls, x: Float, y: Float) =
             Window(
                 x,
                 y,
-                width = 121,
-                height = 48,
+                width = 121f,
+                height = 48f,
                 Text.translatable(id.toTranslationKey("block"))
             ).apply {
                 children.add(
                     Knob(
-                        x = 8, y = 18,
+                        x = 8f, y = 18f,
                         controls.frequency,
                         min = 1f, max = 25000f,
                         Knob.Color.Orange,
@@ -71,7 +71,7 @@ class BiquadBlockDescriptor(
                 )
                 children.add(
                     Knob(
-                        x = 36, y = 18,
+                        x = 36f, y = 18f,
                         controls.frequencyCV,
                         min = -20000f, max = 20000f,
                         Knob.Color.Orange,
@@ -80,7 +80,7 @@ class BiquadBlockDescriptor(
                 )
                 children.add(
                     Knob(
-                        x = 64, y = 18,
+                        x = 64f, y = 18f,
                         controls.resonance,
                         min = 0f, max = 1f,
                         Knob.Color.Blue,
@@ -89,7 +89,7 @@ class BiquadBlockDescriptor(
                 )
                 children.add(
                     Knob(
-                        x = 92, y = 18,
+                        x = 92f, y = 18f,
                         controls.resonanceCV,
                         min = -1f, max = 1f,
                         Knob.Color.Blue,

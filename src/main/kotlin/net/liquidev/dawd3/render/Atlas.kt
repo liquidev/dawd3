@@ -4,5 +4,5 @@ import net.minecraft.util.Identifier
 
 data class Atlas(
     val asset: Identifier,
-    val size: Int,
+    val size: Float,
 )

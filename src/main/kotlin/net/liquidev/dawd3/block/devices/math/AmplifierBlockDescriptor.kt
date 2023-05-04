@@ -45,18 +45,18 @@ object AmplifierBlockDescriptor : DeviceBlockDescriptor<AmplifierBlockDescriptor
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<AmplifierDevice.Controls> {
-        override fun open(controls: AmplifierDevice.Controls, x: Int, y: Int): Widget =
+        override fun open(controls: AmplifierDevice.Controls, x: Float, y: Float): Widget =
             Window(
                 x,
                 y,
-                width = 78,
-                height = 48,
+                width = 78f,
+                height = 48f,
                 Text.translatable("block.dawd3.amplifier")
             ).apply {
                 children.add(
                     Knob(
-                        x = 14,
-                        y = 18,
+                        x = 14f,
+                        y = 18f,
                         control = controls.amplitude,
                         min = 0f,
                         max = 1f,
@@ -66,8 +66,8 @@ object AmplifierBlockDescriptor : DeviceBlockDescriptor<AmplifierBlockDescriptor
                 )
                 children.add(
                     Knob(
-                        x = 42,
-                        y = 18,
+                        x = 42f,
+                        y = 18f,
                         control = controls.amplitudeCV,
                         min = -8f,
                         max = 8f,

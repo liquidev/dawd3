@@ -44,18 +44,18 @@ object PulseOscillatorBlockDescriptor : DeviceBlockDescriptor<PulseOscillatorBlo
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<PulseOscillatorDevice.Controls> {
-        override fun open(controls: PulseOscillatorDevice.Controls, x: Int, y: Int) =
+        override fun open(controls: PulseOscillatorDevice.Controls, x: Float, y: Float) =
             Window(
                 x,
                 y,
-                width = 78,
-                height = 48,
+                width = 78f,
+                height = 48f,
                 Text.translatable("block.dawd3.pulse_oscillator")
             ).apply {
                 children.add(
                     Knob(
-                        x = 14,
-                        y = 18,
+                        x = 14f,
+                        y = 18f,
                         control = controls.dutyCycle,
                         min = 0f,
                         max = 1f,
@@ -65,8 +65,8 @@ object PulseOscillatorBlockDescriptor : DeviceBlockDescriptor<PulseOscillatorBlo
                 )
                 children.add(
                     Knob(
-                        x = 42,
-                        y = 18,
+                        x = 42f,
+                        y = 18f,
                         control = controls.dutyCycleCV,
                         min = 0f,
                         max = 1f,

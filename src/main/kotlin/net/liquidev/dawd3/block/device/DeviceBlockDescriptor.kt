@@ -41,7 +41,7 @@ interface DeviceBlockDescriptor<out CS : DeviceBlockDescriptor.ClientState, out 
     }
 
     interface UI<out Controls : ControlSet> {
-        fun open(controls: @UnsafeVariance Controls, x: Int, y: Int): Widget
+        fun open(controls: @UnsafeVariance Controls, x: Float, y: Float): Widget
     }
 
     val ui: UI<Controls>?

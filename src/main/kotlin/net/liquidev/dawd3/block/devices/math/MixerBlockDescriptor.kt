@@ -32,12 +32,12 @@ object MixerBlockDescriptor : DeviceBlockDescriptor<MixerBlockDescriptor.ClientS
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<MixDevice.Controls> {
-        override fun open(controls: MixDevice.Controls, x: Int, y: Int) =
-            Window(x, y, width = 78, height = 48, Text.translatable("block.dawd3.mixer")).apply {
+        override fun open(controls: MixDevice.Controls, x: Float, y: Float) =
+            Window(x, y, width = 78f, height = 48f, Text.translatable("block.dawd3.mixer")).apply {
                 children.add(
                     Knob(
-                        x = 14,
-                        y = 18,
+                        x = 14f,
+                        y = 18f,
                         control = controls.aAmplitude,
                         min = 0f,
                         max = 1f,
@@ -47,8 +47,8 @@ object MixerBlockDescriptor : DeviceBlockDescriptor<MixerBlockDescriptor.ClientS
                 )
                 children.add(
                     Knob(
-                        x = 42,
-                        y = 18,
+                        x = 42f,
+                        y = 18f,
                         control = controls.bAmplitude,
                         min = 0f,
                         max = 1f,

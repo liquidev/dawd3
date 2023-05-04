@@ -4,7 +4,7 @@ import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.BlockPos
 
 sealed interface Event {
-    fun relativeTo(x: Double, y: Double): Event
+    fun relativeTo(x: Float, y: Float): Event
 }
 
 enum class Action {
@@ -14,13 +14,13 @@ enum class Action {
 
 data class MouseButton(
     val action: Action,
-    val mouseX: Double,
-    val mouseY: Double,
-    val absoluteMouseX: Double,
-    val absoluteMouseY: Double,
+    val mouseX: Float,
+    val mouseY: Float,
+    val absoluteMouseX: Float,
+    val absoluteMouseY: Float,
     val button: Int,
 ) : Event {
-    constructor(action: Action, mouseX: Double, mouseY: Double, button: Int) : this(
+    constructor(action: Action, mouseX: Float, mouseY: Float, button: Int) : this(
         action,
         mouseX,
         mouseY,
@@ -29,19 +29,19 @@ data class MouseButton(
         button
     )
 
-    override fun relativeTo(x: Double, y: Double) =
+    override fun relativeTo(x: Float, y: Float) =
         MouseButton(action, mouseX - x, mouseY - y, absoluteMouseX, absoluteMouseY, button)
 }
 
 data class MouseMove(
-    val mouseX: Double,
-    val mouseY: Double,
-    val absoluteMouseX: Double,
-    val absoluteMouseY: Double,
+    val mouseX: Float,
+    val mouseY: Float,
+    val absoluteMouseX: Float,
+    val absoluteMouseY: Float,
 ) : Event {
-    constructor(mouseX: Double, mouseY: Double) : this(mouseX, mouseY, mouseX, mouseY)
+    constructor(mouseX: Float, mouseY: Float) : this(mouseX, mouseY, mouseX, mouseY)
 
-    override fun relativeTo(x: Double, y: Double): Event =
+    override fun relativeTo(x: Float, y: Float): Event =
         MouseMove(mouseX - x, mouseY - y, absoluteMouseX, absoluteMouseY)
 }
 

@@ -19,30 +19,30 @@ import kotlin.math.sqrt
 object Render {
     fun sprite(
         matrices: MatrixStack,
-        x: Int,
-        y: Int,
-        width: Int,
-        height: Int,
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
         atlas: Atlas,
         sprite: Sprite,
     ) {
         RenderSystem.setShaderTexture(0, atlas.asset)
         DrawableHelper.drawTexture(
             matrices,
-            x,
-            y,
-            width,
-            height,
-            sprite.u.toFloat(),
-            sprite.v.toFloat(),
-            sprite.width,
-            sprite.height,
-            atlas.size,
-            atlas.size
+            x.toInt(),
+            y.toInt(),
+            width.toInt(),
+            height.toInt(),
+            sprite.u,
+            sprite.v,
+            sprite.width.toInt(),
+            sprite.height.toInt(),
+            atlas.size.toInt(),
+            atlas.size.toInt()
         )
     }
 
-    fun sprite(matrices: MatrixStack, x: Int, y: Int, atlas: Atlas, icon: Sprite) {
+    fun sprite(matrices: MatrixStack, x: Float, y: Float, atlas: Atlas, icon: Sprite) {
         sprite(matrices, x, y, icon.width, icon.height, atlas, icon)
     }
 
@@ -151,138 +151,168 @@ object Render {
         Tessellator.getInstance().draw()
     }
 
+    private fun drawTexture(
+        matrices: MatrixStack,
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
+        u: Float,
+        v: Float,
+        regionWidth: Float,
+        regionHeight: Float,
+        textureWidth: Float,
+        textureHeigh: Float,
+    ) {
+        // Temporarily defined to just defer to DrawableHelper, later on we should introduce support
+        // for rendering at floating-point coordinates.
+        DrawableHelper.drawTexture(
+            matrices,
+            x.toInt(),
+            y.toInt(),
+            width.toInt(),
+            height.toInt(),
+            u,
+            v,
+            regionWidth.toInt(),
+            regionHeight.toInt(),
+            textureWidth.toInt(),
+            textureHeigh.toInt()
+        )
+    }
+
     fun ninePatch(
         matrices: MatrixStack,
-        x: Int,
-        y: Int,
-        width: Int,
-        height: Int,
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
         atlas: Atlas,
         ninePatch: NinePatch,
     ) {
         RenderSystem.setShaderTexture(0, atlas.asset)
 
         // Top left
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x,
             y,
             ninePatch.borderLeft,
             ninePatch.borderTop,
-            ninePatch.u.toFloat(),
-            ninePatch.v.toFloat(),
+            ninePatch.u,
+            ninePatch.v,
             ninePatch.borderLeft,
             ninePatch.borderTop,
             atlas.size,
             atlas.size
         )
         // Top center
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x + ninePatch.borderLeft,
             y,
             width - ninePatch.borderLeft - ninePatch.borderRight,
             ninePatch.borderTop,
-            (ninePatch.u + ninePatch.borderLeft).toFloat(),
-            ninePatch.v.toFloat(),
+            ninePatch.u + ninePatch.borderLeft,
+            ninePatch.v,
             ninePatch.width - ninePatch.borderLeft - ninePatch.borderRight,
             ninePatch.borderTop,
             atlas.size,
             atlas.size
         )
         // Top right
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x + width - ninePatch.borderRight,
             y,
             ninePatch.borderRight,
             ninePatch.borderTop,
-            (ninePatch.u + ninePatch.width - ninePatch.borderRight).toFloat(),
-            ninePatch.v.toFloat(),
+            ninePatch.u + ninePatch.width - ninePatch.borderRight,
+            ninePatch.v,
             ninePatch.borderRight,
             ninePatch.borderTop,
             atlas.size,
             atlas.size
         )
         // Middle left
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x,
             y + ninePatch.borderTop,
             ninePatch.borderLeft,
             height - ninePatch.borderTop - ninePatch.borderBottom,
-            ninePatch.u.toFloat(),
-            (ninePatch.v + ninePatch.borderTop).toFloat(),
+            ninePatch.u,
+            ninePatch.v + ninePatch.borderTop,
             ninePatch.borderLeft,
             ninePatch.height - ninePatch.borderTop - ninePatch.borderBottom,
             atlas.size,
             atlas.size
         )
         // Center
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x + ninePatch.borderLeft,
             y + ninePatch.borderTop,
             width - ninePatch.borderLeft - ninePatch.borderRight,
             height - ninePatch.borderTop - ninePatch.borderBottom,
-            (ninePatch.u + ninePatch.borderLeft).toFloat(),
-            (ninePatch.v + ninePatch.borderTop).toFloat(),
+            ninePatch.u + ninePatch.borderLeft,
+            ninePatch.v + ninePatch.borderTop,
             ninePatch.width - ninePatch.borderLeft - ninePatch.borderRight,
             ninePatch.height - ninePatch.borderTop - ninePatch.borderBottom,
             atlas.size,
             atlas.size
         )
         // Middle right
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x + width - ninePatch.borderRight,
             y + ninePatch.borderTop,
             ninePatch.borderLeft,
             height - ninePatch.borderTop - ninePatch.borderBottom,
-            (ninePatch.u + ninePatch.width - ninePatch.borderRight).toFloat(),
-            (ninePatch.v + ninePatch.borderTop).toFloat(),
+            ninePatch.u + ninePatch.width - ninePatch.borderRight,
+            ninePatch.v + ninePatch.borderTop,
             ninePatch.borderLeft,
             ninePatch.height - ninePatch.borderTop - ninePatch.borderBottom,
             atlas.size,
             atlas.size
         )
         // Bottom left
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x,
             y + height - ninePatch.borderBottom,
             ninePatch.borderLeft,
             ninePatch.borderBottom,
-            ninePatch.u.toFloat(),
-            (ninePatch.v + ninePatch.height - ninePatch.borderBottom).toFloat(),
+            ninePatch.u,
+            ninePatch.v + ninePatch.height - ninePatch.borderBottom,
             ninePatch.borderLeft,
             ninePatch.borderBottom,
             atlas.size,
             atlas.size
         )
         // Bottom center
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x + ninePatch.borderLeft,
             y + height - ninePatch.borderBottom,
             width - ninePatch.borderLeft - ninePatch.borderRight,
             ninePatch.borderBottom,
-            (ninePatch.u + ninePatch.borderLeft).toFloat(),
-            (ninePatch.v + ninePatch.height - ninePatch.borderBottom).toFloat(),
+            ninePatch.u + ninePatch.borderLeft,
+            ninePatch.v + ninePatch.height - ninePatch.borderBottom,
             ninePatch.width - ninePatch.borderLeft - ninePatch.borderRight,
             ninePatch.borderBottom,
             atlas.size,
             atlas.size
         )
         // Bottom right
-        DrawableHelper.drawTexture(
+        drawTexture(
             matrices,
             x + width - ninePatch.borderRight,
             y + height - ninePatch.borderBottom,
             ninePatch.borderRight,
             ninePatch.borderBottom,
-            (ninePatch.u + ninePatch.width - ninePatch.borderRight).toFloat(),
-            (ninePatch.v + ninePatch.height - ninePatch.borderBottom).toFloat(),
+            ninePatch.u + ninePatch.width - ninePatch.borderRight,
+            ninePatch.v + ninePatch.height - ninePatch.borderBottom,
             ninePatch.borderRight,
             ninePatch.borderBottom,
             atlas.size,
@@ -290,54 +320,42 @@ object Render {
         )
     }
 
-    fun textWidth(text: Text): Int {
+    fun textWidth(text: Text): Float {
         val textRenderer = MinecraftClient.getInstance().textRenderer
-        return textRenderer.getWidth(text)
+        return textRenderer.getWidth(text).toFloat()
     }
 
-    fun text(matrices: MatrixStack, x: Int, y: Int, text: Text, color: Int) {
+    fun text(matrices: MatrixStack, x: Float, y: Float, text: Text, color: Int) {
         val textRenderer = MinecraftClient.getInstance().textRenderer
-        textRenderer.draw(
-            matrices,
-            text,
-            x.toFloat(),
-            y.toFloat(),
-            color
-        )
+        textRenderer.draw(matrices, text, x, y, color)
     }
 
-    fun textCentered(matrices: MatrixStack, centerX: Int, y: Int, text: Text, color: Int) {
+    fun textCentered(matrices: MatrixStack, centerX: Float, y: Float, text: Text, color: Int) {
         val textRenderer = MinecraftClient.getInstance().textRenderer
         val textWidth = textRenderer.getWidth(text)
         val x = centerX - textWidth / 2
-        textRenderer.draw(
-            matrices,
-            text,
-            x.toFloat(),
-            y.toFloat(),
-            color
-        )
+        text(matrices, x, y, text, color)
     }
 
-    fun tooltipWidth(text: Text): Int = textWidth(text) + 5
+    fun tooltipWidth(text: Text): Float = textWidth(text) + 5f
 
     fun tooltip(
         matrices: MatrixStack,
-        x: Int,
-        y: Int,
+        x: Float,
+        y: Float,
         text: Text,
         atlas: Atlas,
         tooltip: Tooltip,
     ) {
         val width = tooltipWidth(text)
-        ninePatch(matrices, x, y, width, height = 14, atlas, tooltip.ninePatch)
+        ninePatch(matrices, x, y, width, height = 14f, atlas, tooltip.ninePatch)
         text(matrices, x + 3, y + 3, text, tooltip.textColor)
     }
 
     fun tooltipCentered(
         matrices: MatrixStack,
-        centerX: Int,
-        y: Int,
+        centerX: Float,
+        y: Float,
         text: Text,
         atlas: Atlas,
         tooltip: Tooltip,

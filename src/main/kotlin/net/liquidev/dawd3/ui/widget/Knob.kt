@@ -19,34 +19,42 @@ import net.minecraft.client.util.InputUtil
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.Text
 import org.lwjgl.glfw.GLFW
-import kotlin.math.*
+import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sin
 
 class Knob(
-    x: Int,
-    y: Int,
+    x: Float,
+    y: Float,
     val control: FloatControl,
     val min: Float,
     val max: Float,
     val color: Color,
-    size: Int = normalSize,
+    size: Float = normalSize,
     val unit: FloatUnit = RawValue,
     // Pick a default sensitivity such that for pitch ranges we move by steps of 0.25.
     val sensitivity: Float = (max - min) * 0.25f / 96f,
 ) : Widget(x, y) {
     override val width = size
-    override val height = size + 4
+    override val height = size + 4f
 
-    private data class DraggingInfo(var previousMouseY: Double)
+    private data class DraggingInfo(var previousMouseY: Float)
 
     private var draggingInfo: DraggingInfo? = null
 
     private val controlLabel =
         Text.translatable(control.descriptor.name.toTranslationKey()).setStyle(Rack.smallText)
 
-    override fun drawContent(matrices: MatrixStack, mouseX: Int, mouseY: Int, deltaTime: Float) {
-        val centerX = width.toFloat() / 2
-        val centerY = height.toFloat() / 2
-        val radius = width.toFloat() / 2
+    override fun drawContent(
+        matrices: MatrixStack,
+        mouseX: Float,
+        mouseY: Float,
+        deltaTime: Float,
+    ) {
+        val centerX = width / 2f
+        val centerY = height / 2f
+        val radius = width / 2f
 
         val valueAngle = mapRange(control.value, min, max, startAngle.value, endAngle.value)
         val zeroAngle = clamp(
@@ -92,7 +100,7 @@ class Knob(
 
         Render.textCentered(
             matrices,
-            centerX.roundToInt() + 1,
+            centerX + 1f,
             height - 5,
             controlLabel,
             0x111111
@@ -101,7 +109,7 @@ class Knob(
         if (draggingInfo != null) {
             Render.tooltipCentered(
                 matrices,
-                centerX.toInt(),
+                centerX,
                 height - 4,
                 Text.literal(unit.display(control.value)),
                 Rack.atlas,
@@ -117,8 +125,8 @@ class Knob(
                 when (event.action) {
                     Action.Down -> if (
                         containsRelativePoint(
-                            event.mouseX.toInt(),
-                            event.mouseY.toInt()
+                            event.mouseX,
+                            event.mouseY
                         )
                     ) {
                         draggingInfo = DraggingInfo(event.absoluteMouseY)
@@ -154,11 +162,14 @@ class Knob(
                 val draggingInfo = draggingInfo
                 if (draggingInfo != null) {
                     val guiScale = client.options.guiScale.value.toFloat()
-                    val deltaY = (draggingInfo.previousMouseY - event.absoluteMouseY) * guiScale
+                    var deltaY = (draggingInfo.previousMouseY - event.absoluteMouseY) * guiScale
+                    if (isFineTuning()) {
+                        deltaY *= 0.05f
+                    }
                     BlockEntityControls.setFloatControlValue(
                         context.blockPosition,
                         control,
-                        alterValue(control.value, by = deltaY.toFloat())
+                        alterValue(control.value, by = deltaY)
                     )
                     draggingInfo.previousMouseY = event.absoluteMouseY
                     // Consume the events so that other controls don't get triggered while the knob
@@ -170,6 +181,12 @@ class Knob(
 
         return false
     }
+
+    private fun isFineTuning(): Boolean =
+        InputUtil.isKeyPressed(
+            MinecraftClient.getInstance().window.handle,
+            GLFW.GLFW_KEY_LEFT_SHIFT
+        )
 
     private fun alterValue(value: Float, by: Float): Float =
         max(min(value + by * sensitivity, max), min)
@@ -195,7 +212,6 @@ class Knob(
             return TextureStrip(u, 16f, u, 32f)
         }
 
-        const val normalSize = 20
-        const val smallSize = 16
+        const val normalSize = 20f
     }
 }
