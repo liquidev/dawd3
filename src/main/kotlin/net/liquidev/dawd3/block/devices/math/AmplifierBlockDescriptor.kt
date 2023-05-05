@@ -8,7 +8,6 @@ import net.liquidev.dawd3.block.device.PhysicalPort
 import net.liquidev.dawd3.ui.units.AmplitudeValue
 import net.liquidev.dawd3.ui.units.PercentageValue
 import net.liquidev.dawd3.ui.widget.Knob
-import net.liquidev.dawd3.ui.widget.Widget
 import net.liquidev.dawd3.ui.widget.Window
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.text.Text
@@ -45,7 +44,7 @@ object AmplifierBlockDescriptor : DeviceBlockDescriptor<AmplifierBlockDescriptor
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<AmplifierDevice.Controls> {
-        override fun open(controls: AmplifierDevice.Controls, x: Float, y: Float): Widget =
+        override fun open(controls: AmplifierDevice.Controls, x: Float, y: Float) =
             Window(
                 x,
                 y,

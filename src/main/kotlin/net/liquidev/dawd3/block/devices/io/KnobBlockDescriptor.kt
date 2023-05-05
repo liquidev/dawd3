@@ -8,7 +8,6 @@ import net.liquidev.dawd3.block.device.PhysicalPort
 import net.liquidev.dawd3.block.device.descriptor.FaceTextures
 import net.liquidev.dawd3.common.Cuboids
 import net.liquidev.dawd3.ui.widget.Knob
-import net.liquidev.dawd3.ui.widget.Widget
 import net.liquidev.dawd3.ui.widget.Window
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.text.Text
@@ -39,7 +38,7 @@ object KnobBlockDescriptor : DeviceBlockDescriptor<KnobBlockDescriptor.ClientSta
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<ConstantDevice.Controls> {
-        override fun open(controls: ConstantDevice.Controls, x: Float, y: Float): Widget =
+        override fun open(controls: ConstantDevice.Controls, x: Float, y: Float) =
             Window(x, y, 48f, 48f, Text.translatable("block.dawd3.knob")).apply {
                 children.add(
                     Knob(

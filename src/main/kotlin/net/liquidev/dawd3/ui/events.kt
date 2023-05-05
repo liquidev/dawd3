@@ -45,7 +45,14 @@ data class MouseMove(
         MouseMove(mouseX - x, mouseY - y, absoluteMouseX, absoluteMouseY)
 }
 
-class EventContext(
+class DeviceEventContext(
     val world: ClientWorld,
     val blockPosition: BlockPos,
 )
+
+open class Message(val eventConsumed: Boolean) {
+    companion object {
+        val eventIgnored = Message(eventConsumed = false)
+        val eventUsed = Message(eventConsumed = true)
+    }
+}

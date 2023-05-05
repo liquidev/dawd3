@@ -1,11 +1,11 @@
 package net.liquidev.dawd3.ui
 
+import com.mojang.blaze3d.systems.RenderSystem
 import net.liquidev.dawd3.Mod
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
 import net.liquidev.dawd3.render.Atlas
-import net.liquidev.dawd3.render.Render
 import net.liquidev.dawd3.render.Sprite
-import net.liquidev.dawd3.ui.widget.Widget
+import net.liquidev.dawd3.ui.widget.rack.Rack
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.util.math.MatrixStack
@@ -15,86 +15,39 @@ import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import kotlin.math.max
 
-class Rack(
+class RackScreen(
     val world: ClientWorld,
     shownDevices: Iterable<BlockPos>,
 ) : Screen(Text.translatable("screen.dawd3.rack.title")) {
-    private data class OpenWidget(
-        val blockPosition: BlockPos,
-        val widget: Widget,
-    )
 
-    private var openWidgets =
-        ArrayList(shownDevices.mapNotNull { blockPosition ->
-            val blockEntity = world.getBlockEntity(blockPosition) as DeviceBlockEntity
-            blockEntity.descriptor.ui
-                ?.open(blockEntity.controls, 0f, 0f)
-                ?.let { widget -> OpenWidget(blockPosition, widget) }
-        })
-
-    private fun layoutWindows() {
-        var x = 16f
-        var y = 16f
-        var rowHeight = 0f
-        for (openWidget in openWidgets) {
-            if (x + openWidget.widget.width >= width - 16) {
-                x = 16f
-                y += rowHeight + 8f
-                rowHeight = 0f
-            }
-            openWidget.widget.x = x
-            openWidget.widget.y = y
-            x += openWidget.widget.width + 8f
-            rowHeight = max(rowHeight, openWidget.widget.height)
-        }
-    }
+    private val rootWidget = Rack(width.toFloat(), height.toFloat(), world, shownDevices)
 
     override fun init() {
         super.init()
-        layoutWindows()
+        rootWidget.width = width.toFloat()
+        rootWidget.height = height.toFloat()
+        rootWidget.reflow()
     }
 
     override fun resize(client: MinecraftClient?, width: Int, height: Int) {
         super.resize(client, width, height)
-        layoutWindows()
+        rootWidget.width = width.toFloat()
+        rootWidget.height = height.toFloat()
+        rootWidget.reflow()
     }
 
     override fun render(matrices: MatrixStack, mouseX: Int, mouseY: Int, delta: Float) {
         renderBackground(matrices)
-
-        // Handle blocks being destroyed behind our back.
-        openWidgets.removeIf { world.getBlockEntity(it.blockPosition) !is DeviceBlockEntity }
-        if (openWidgets.isEmpty()) {
-            close()
-        }
-
-        for (openWidget in openWidgets) {
-            openWidget.widget.draw(matrices, mouseX.toFloat(), mouseY.toFloat(), delta)
-        }
-
-        Render.sprite(
-            matrices,
-            8f,
-            height - badge.height - 8,
-            badge.width * 2,
-            badge.height * 2,
-            atlas,
-            badge
-        )
+        // For some silly reason blending is disabled by default, so let's enable it for rendering
+        // widgets.
+        RenderSystem.enableBlend()
+        rootWidget.draw(matrices, mouseX.toFloat(), mouseY.toFloat(), delta)
+        RenderSystem.disableBlend()
     }
 
     private fun propagateEvent(event: Event): Boolean {
-        for (openWidget in openWidgets) {
-            if (
-                openWidget.widget.event(
-                    EventContext(world, openWidget.blockPosition),
-                    event.relativeTo(openWidget.widget.x, openWidget.widget.y)
-                )
-            ) return true
-        }
-        return false
+        return rootWidget.event(Unit, event).eventConsumed
     }
 
     override fun mouseMoved(mouseX: Double, mouseY: Double) {
@@ -128,10 +81,6 @@ class Rack(
 
         val smallFont = Identifier(Mod.id, "altopixel")
         val smallText = Style.EMPTY.withFont(smallFont)!!
-
-        // TODO: This "adjacent device" system is kind of janky but it allows for pretty nice
-        //  organization of your devices into multiple racks of sorts. Maybe in the future we can
-        //  think of collecting non-adjacent devices as well.
 
         fun collectAdjacentDevices(world: World, position: BlockPos): HashSet<BlockPos> {
             val result = hashSetOf<BlockPos>()

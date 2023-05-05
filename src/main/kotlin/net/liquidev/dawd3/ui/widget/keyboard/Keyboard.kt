@@ -12,7 +12,7 @@ class Keyboard(
     firstNote: Int,
     lastNote: Int,
     private val controls: KeyboardDevice.Controls,
-) : Container(x, y) {
+) : Container<DeviceEventContext>(x, y) {
 
     override val children = run {
         var whiteX = 0f
@@ -37,7 +37,7 @@ class Keyboard(
 
     private var pressedKey: Key? = null
 
-    override fun event(context: EventContext, event: Event): Boolean {
+    override fun event(context: DeviceEventContext, event: Event): Message {
         if (event is MouseButton && event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             mouseIsDown = event.action == Action.Down && containsRelativePoint(
                 event.mouseX,
@@ -48,20 +48,20 @@ class Keyboard(
             } else {
                 setPressedKey(context, null)
             }
-            return mouseIsDown && pressedKey != null
+            return if (mouseIsDown && pressedKey != null) Message.eventUsed else Message.eventIgnored
         }
 
         if (event is MouseMove && mouseIsDown) {
             setPressedKey(context, findPressedKey(event.mouseX.toInt(), event.mouseY.toInt()))
         }
 
-        return false
+        return Message.eventIgnored
     }
 
     private fun findPressedKey(mouseX: Int, mouseY: Int): Key? =
         children.findLast { it.containsRelativePoint(mouseX - it.x, mouseY - it.y) }
 
-    private fun setPressedKey(context: EventContext, newKey: Key?) {
+    private fun setPressedKey(context: DeviceEventContext, newKey: Key?) {
         val previousKey = pressedKey
         pressedKey = newKey
         if (newKey != previousKey) {

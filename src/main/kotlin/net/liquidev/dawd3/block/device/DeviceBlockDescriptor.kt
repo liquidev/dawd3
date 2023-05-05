@@ -5,7 +5,7 @@ import net.liquidev.dawd3.audio.device.ControlSet
 import net.liquidev.dawd3.audio.device.DeviceInstance
 import net.liquidev.dawd3.block.device.descriptor.FaceTextures
 import net.liquidev.dawd3.common.Cuboids
-import net.liquidev.dawd3.ui.widget.Widget
+import net.liquidev.dawd3.ui.widget.Window
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Material
 import net.minecraft.client.world.ClientWorld
@@ -41,7 +41,7 @@ interface DeviceBlockDescriptor<out CS : DeviceBlockDescriptor.ClientState, out 
     }
 
     interface UI<out Controls : ControlSet> {
-        fun open(controls: @UnsafeVariance Controls, x: Float, y: Float): Widget
+        fun open(controls: @UnsafeVariance Controls, x: Float, y: Float): Window
     }
 
     val ui: UI<Controls>?

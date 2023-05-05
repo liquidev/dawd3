@@ -364,4 +364,12 @@ object Render {
         val x = centerX - width / 2
         tooltip(matrices, x, y, text, atlas, tooltip)
     }
+
+    inline fun colorized(r: Float, g: Float, b: Float, a: Float, then: () -> Unit) {
+        val (oldR, oldG, oldB, oldA) = RenderSystem.getShaderColor()
+        RenderSystem.setShaderColor(r, g, b, a)
+        RenderSystem.enableBlend() // sigh
+        then()
+        RenderSystem.setShaderColor(oldR, oldG, oldB, oldA)
+    }
 }

@@ -35,7 +35,7 @@ class Knob(
     val unit: FloatUnit = RawValue,
     // Pick a default sensitivity such that for pitch ranges we move by steps of 0.25.
     val sensitivity: Float = (max - min) * 0.25f / 96f,
-) : Widget(x, y) {
+) : DeviceWidget(x, y) {
     override val width = size
     override val height = size + 4f
 
@@ -44,7 +44,7 @@ class Knob(
     private var draggingInfo: DraggingInfo? = null
 
     private val controlLabel =
-        Text.translatable(control.descriptor.name.toTranslationKey()).setStyle(Rack.smallText)
+        Text.translatable(control.descriptor.name.toTranslationKey()).setStyle(RackScreen.smallText)
 
     override fun drawContent(
         matrices: MatrixStack,
@@ -72,7 +72,7 @@ class Knob(
             Radians(min(valueAngle, zeroAngle)),
             Radians(max(valueAngle, zeroAngle)),
             vertexCount = 16,
-            Rack.atlas,
+            RackScreen.atlas,
             coloredStrip(color)
         )
         Render.arcOutline(
@@ -84,7 +84,7 @@ class Knob(
             startAngle,
             endAngle,
             vertexCount = 16,
-            Rack.atlas,
+            RackScreen.atlas,
             blackStrip
         )
         Render.line(
@@ -94,7 +94,7 @@ class Knob(
             centerX + cos(valueAngle) * radius,
             centerY + sin(valueAngle) * radius,
             lineThickness / 2,
-            Rack.atlas,
+            RackScreen.atlas,
             blackStrip
         )
 
@@ -112,13 +112,13 @@ class Knob(
                 centerX,
                 height - 4,
                 Text.literal(unit.display(control.value)),
-                Rack.atlas,
+                RackScreen.atlas,
                 Tooltip.dark
             )
         }
     }
 
-    override fun event(context: EventContext, event: Event): Boolean {
+    override fun event(context: DeviceEventContext, event: Event): Message {
         val client = MinecraftClient.getInstance()
         when (event) {
             is MouseButton -> if (event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
@@ -138,7 +138,7 @@ class Knob(
                             event.absoluteMouseX * guiScale,
                             event.absoluteMouseY * guiScale,
                         )
-                        return true
+                        return Message.eventUsed
                     }
                     Action.Up -> {
                         val draggingInfo = draggingInfo
@@ -174,12 +174,12 @@ class Knob(
                     draggingInfo.previousMouseY = event.absoluteMouseY
                     // Consume the events so that other controls don't get triggered while the knob
                     // is being dragged.
-                    return true
+                    return Message.eventUsed
                 }
             }
         }
 
-        return false
+        return Message.eventIgnored
     }
 
     private fun isFineTuning(): Boolean =

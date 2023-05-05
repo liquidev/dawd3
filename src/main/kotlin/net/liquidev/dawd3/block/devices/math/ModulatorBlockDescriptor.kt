@@ -8,7 +8,6 @@ import net.liquidev.dawd3.block.device.PhysicalPort
 import net.liquidev.dawd3.block.device.descriptor.FaceTextures
 import net.liquidev.dawd3.common.Cuboids
 import net.liquidev.dawd3.ui.widget.Knob
-import net.liquidev.dawd3.ui.widget.Widget
 import net.liquidev.dawd3.ui.widget.Window
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.text.Text
@@ -43,7 +42,7 @@ object ModulatorBlockDescriptor : DeviceBlockDescriptor<ModulatorBlockDescriptor
         ClientState(controls)
 
     override val ui = object : DeviceBlockDescriptor.UI<FmaDevice.Controls> {
-        override fun open(controls: FmaDevice.Controls, x: Float, y: Float): Widget =
+        override fun open(controls: FmaDevice.Controls, x: Float, y: Float) =
             Window(x, y, 78f, 48f, Text.translatable("block.dawd3.modulator")).apply {
                 children.add(
                     Knob(

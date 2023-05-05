@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.liquidev.dawd3.common.*
 import net.liquidev.dawd3.item.PatchCableItem
 import net.liquidev.dawd3.net.DisconnectPort
-import net.liquidev.dawd3.ui.Rack
+import net.liquidev.dawd3.ui.RackScreen
 import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.MinecraftClient
@@ -98,7 +98,7 @@ class DeviceBlock(private val descriptor: AnyDeviceBlockDescriptor) :
         if (usedPortName == null && !player.isSneaking) {
             // We have to do a little dance such that the server executes this code too and doesn't
             // try to perform the item action if the UI is opened.
-            val adjacentDevices = Rack.collectAdjacentDevices(world, pos)
+            val adjacentDevices = RackScreen.collectAdjacentDevices(world, pos)
             val shouldOpenUI = adjacentDevices.any { blockPos ->
                 val blockEntityAtPosition =
                     world.getBlockEntity(blockPos) as? DeviceBlockEntity ?: return@any false
@@ -106,7 +106,7 @@ class DeviceBlock(private val descriptor: AnyDeviceBlockDescriptor) :
             }
             if (shouldOpenUI) {
                 if (world is ClientWorld) {
-                    MinecraftClient.getInstance().setScreen(Rack(world, adjacentDevices))
+                    MinecraftClient.getInstance().setScreen(RackScreen(world, adjacentDevices))
                 }
                 return ActionResult.success(world.isClient)
             }

@@ -3,10 +3,11 @@ package net.liquidev.dawd3.ui.widget.keyboard
 import net.liquidev.dawd3.audio.device.FloatControl
 import net.liquidev.dawd3.render.Render
 import net.liquidev.dawd3.render.Sprite
+import net.liquidev.dawd3.ui.DeviceEventContext
 import net.liquidev.dawd3.ui.Event
-import net.liquidev.dawd3.ui.EventContext
-import net.liquidev.dawd3.ui.Rack
-import net.liquidev.dawd3.ui.widget.Widget
+import net.liquidev.dawd3.ui.Message
+import net.liquidev.dawd3.ui.RackScreen
+import net.liquidev.dawd3.ui.widget.DeviceWidget
 import net.minecraft.client.util.math.MatrixStack
 
 class Key(
@@ -15,7 +16,7 @@ class Key(
     val type: Type,
     val note: Float,
     val pitchControl: FloatControl,
-) : Widget(x, y) {
+) : DeviceWidget(x, y) {
 
     enum class Type(
         val width: Float,
@@ -55,7 +56,7 @@ class Key(
             matrices,
             x = 0f,
             y = 0f,
-            Rack.atlas,
+            RackScreen.atlas,
             if (isPressed) type.pressedSprite else type.idleSprite
         )
         if (pitchControl.value == note) {
@@ -63,13 +64,13 @@ class Key(
                 matrices,
                 x = width / 2f - type.currentPitchSprite.width / 2f,
                 y = height - type.currentPitchSprite.height - 2,
-                Rack.atlas,
+                RackScreen.atlas,
                 type.currentPitchSprite
             )
         }
     }
 
-    override fun event(context: EventContext, event: Event) = false
+    override fun event(context: DeviceEventContext, event: Event) = Message.eventIgnored
 
     internal fun triggerDown() {
         isPressed = true

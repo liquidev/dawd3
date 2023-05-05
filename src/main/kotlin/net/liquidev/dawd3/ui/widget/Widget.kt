@@ -1,10 +1,11 @@
 package net.liquidev.dawd3.ui.widget
 
+import net.liquidev.dawd3.ui.DeviceEventContext
 import net.liquidev.dawd3.ui.Event
-import net.liquidev.dawd3.ui.EventContext
+import net.liquidev.dawd3.ui.Message
 import net.minecraft.client.util.math.MatrixStack
 
-abstract class Widget(var x: Float, var y: Float) {
+abstract class Widget<in C, out M : Message>(var x: Float, var y: Float) {
     abstract val width: Float
     abstract val height: Float
 
@@ -15,37 +16,44 @@ abstract class Widget(var x: Float, var y: Float) {
         deltaTime: Float,
     )
 
-    /** Returns false to propagate the event, or true to consume it. */
-    abstract fun event(context: EventContext, event: Event): Boolean
+    abstract fun event(context: C, event: Event): M
 
-    fun draw(matrices: MatrixStack, mouseX: Float, mouseY: Float, deltaTime: Float) {
+    inline fun drawInside(matrices: MatrixStack, draw: () -> Unit) {
         matrices.push()
         matrices.translate(x.toDouble(), y.toDouble(), 0.0)
-        drawContent(matrices, mouseX - x, mouseY - y, deltaTime)
+        draw()
         matrices.pop()
     }
+
+    fun draw(matrices: MatrixStack, mouseX: Float, mouseY: Float, deltaTime: Float) {
+        drawInside(matrices) { drawContent(matrices, mouseX - x, mouseY - y, deltaTime) }
+    }
+
+    /** Can be overridden to reflow the children's layout. */
+    open fun reflow() {}
 
     fun containsRelativePoint(x: Float, y: Float) =
         x >= 0 && y >= 0 && x <= width && y <= height
 
     companion object {
         /** Propagates the event through the given iterable, returns whether it was consumed in the end. */
-        fun propagateEvent(
-            context: EventContext,
+        fun <C> propagateEvent(
+            context: C,
             event: Event,
-            through: Iterable<Widget>,
-        ): Boolean {
+            through: Iterable<Widget<C, Message>>,
+        ): Message {
             for (widget in through) {
-                if (
-                    widget.event(
-                        context,
-                        event.relativeTo(widget.x, widget.y)
-                    )
-                ) {
-                    return true
+                val message = widget.event(
+                    context,
+                    event.relativeTo(widget.x, widget.y)
+                )
+                if (message.eventConsumed) {
+                    return message
                 }
             }
-            return false
+            return Message.eventIgnored
         }
     }
 }
+
+typealias DeviceWidget = Widget<DeviceEventContext, Message>
