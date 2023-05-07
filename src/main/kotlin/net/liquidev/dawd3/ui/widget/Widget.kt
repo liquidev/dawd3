@@ -18,7 +18,7 @@ abstract class Widget<in C, out M : Message>(var x: Float, var y: Float) {
 
     abstract fun event(context: C, event: Event): M
 
-    inline fun drawInside(matrices: MatrixStack, draw: () -> Unit) {
+    inline fun drawInside(matrices: MatrixStack, crossinline draw: () -> Unit) {
         matrices.push()
         matrices.translate(x.toDouble(), y.toDouble(), 0.0)
         draw()

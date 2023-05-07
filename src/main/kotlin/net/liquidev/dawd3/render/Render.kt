@@ -27,6 +27,7 @@ object Render {
         sprite: Sprite,
     ) {
         RenderSystem.setShaderTexture(0, atlas.asset)
+        RenderSystem.enableBlend()
         DrawableHelper.drawTexture(
             matrices,
             x.toInt(),
@@ -166,6 +167,7 @@ object Render {
     ) {
         // Temporarily defined to just defer to DrawableHelper, later on we should introduce support
         // for rendering at floating-point coordinates.
+        RenderSystem.enableBlend()
         DrawableHelper.drawTexture(
             matrices,
             x.toInt(),
@@ -365,7 +367,7 @@ object Render {
         tooltip(matrices, x, y, text, atlas, tooltip)
     }
 
-    inline fun colorized(r: Float, g: Float, b: Float, a: Float, then: () -> Unit) {
+    inline fun colorized(r: Float, g: Float, b: Float, a: Float, crossinline then: () -> Unit) {
         val (oldR, oldG, oldB, oldA) = RenderSystem.getShaderColor()
         RenderSystem.setShaderColor(r, g, b, a)
         RenderSystem.enableBlend() // sigh

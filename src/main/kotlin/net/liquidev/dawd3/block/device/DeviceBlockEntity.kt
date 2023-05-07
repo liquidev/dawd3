@@ -51,6 +51,22 @@ class DeviceBlockEntity(
      */
     var shelf: UUID? = null
 
+    /**
+     * Order of shelves when the UI is open.
+     *
+     * This is propagated and merged between devices upon the UI being opened.
+     */
+    val shelfOrder = mutableListOf<UUID>()
+
+    /**
+     * At which position the device should be sorted in the rack. Lower priorities mean earlier
+     * positions.
+     *
+     * Devices start out with the maximum possible priority and no shelf, which means they'll be
+     * appended to the end of the sidebar in an undefined order.
+     */
+    var sortPriority = Int.MAX_VALUE
+
     /** NBT compound keys. */
     private object Nbt {
         const val controls = "controls"
@@ -72,6 +88,8 @@ class DeviceBlockEntity(
         }
 
         const val shelf = "shelf"
+        const val shelfOrder = "shelfOrder"
+        const val sortPriority = "sortPriority"
     }
 
     override fun readNbt(nbt: NbtCompound) {
@@ -131,9 +149,23 @@ class DeviceBlockEntity(
             outputConnections[port] = blockPosition
         }
 
-        if (nbt.containsUuid(Nbt.shelf)) {
-            shelf = nbt.getUuid(Nbt.shelf)
+        shelf = if (nbt.containsUuid(Nbt.shelf)) {
+            nbt.getUuid(Nbt.shelf)
+        } else {
+            null
         }
+        val shelfOrderNbt = nbt.getList(Nbt.shelfOrder, NbtElement.INT_ARRAY_TYPE.toInt())
+        shelfOrder.clear()
+        for (i in 0 until shelfOrderNbt.size) {
+            try {
+                val uuid = NbtHelper.toUuid(shelfOrderNbt[i])
+                shelfOrder.add(uuid)
+            } catch (_: IllegalArgumentException) {
+                // toUuid may throw an IllegalArgumentException if the UUID doesn't follow the
+                // expected format. In that case we just ignore the error and move on.
+            }
+        }
+        sortPriority = nbt.getInt(Nbt.sortPriority)
     }
 
     override fun writeNbt(nbt: NbtCompound) {
@@ -170,6 +202,18 @@ class DeviceBlockEntity(
             outputConnectionsNbt.add(connectionNbt)
         }
         nbt.put(Nbt.outputConnections, outputConnectionsNbt)
+
+        if (shelf != null) {
+            nbt.putUuid(Nbt.shelf, shelf)
+        } else {
+            nbt.remove(Nbt.shelf)
+        }
+        val shelfOrderNbt = NbtList()
+        for (shelfUuid in shelfOrder) {
+            shelfOrderNbt.add(NbtHelper.fromUuid(shelfUuid))
+        }
+        nbt.put(Nbt.shelfOrder, shelfOrderNbt)
+        nbt.putInt(Nbt.sortPriority, sortPriority)
     }
 
     override fun onClientLoad(world: ClientWorld) {

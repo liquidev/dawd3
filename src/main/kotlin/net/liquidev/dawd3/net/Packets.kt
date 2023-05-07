@@ -11,5 +11,7 @@ object Packets {
     fun registerServerReceivers() {
         TweakControl.registerServerReceiver()
         ControlTweaked.registerServerReceiver()
+        EditRack.registerServerReceiver()
+        ReorderRack.registerServerReceiver()
     }
 }

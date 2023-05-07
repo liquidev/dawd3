@@ -32,7 +32,7 @@
   "block.dawd3.saw_oscillator": "Saw Oscillator",
   "block.dawd3.sine_oscillator": "Sine Oscillator",
   "block.dawd3.triangle_oscillator": "Triangle Oscillator",
-  "screen.dawd3.rack.title": "Rack",
+  "screen.dawd3.rack.shelf_hint": "Drag devices here to organize them",
   "dawd3.control.dawd3.adsr.attack": "ATT",
   "dawd3.control.dawd3.adsr.decay": "DEC",
   "dawd3.control.dawd3.adsr.sustain": "SUS",

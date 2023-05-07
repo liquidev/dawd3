@@ -21,7 +21,8 @@ class RackScreen(
     shownDevices: Iterable<BlockPos>,
 ) : Screen(Text.translatable("screen.dawd3.rack.title")) {
 
-    private val rootWidget = Rack(width.toFloat(), height.toFloat(), world, shownDevices)
+    private val rootWidget =
+        Rack(width.toFloat(), height.toFloat(), world, shownDevices)
 
     override fun init() {
         super.init()

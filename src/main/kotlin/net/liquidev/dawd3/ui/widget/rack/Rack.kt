@@ -1,6 +1,10 @@
 package net.liquidev.dawd3.ui.widget.rack
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.liquidev.dawd3.block.device.DeviceBlockEntity
+import net.liquidev.dawd3.common.moveElement
+import net.liquidev.dawd3.net.EditRack
+import net.liquidev.dawd3.net.ReorderRack
 import net.liquidev.dawd3.render.NinePatch
 import net.liquidev.dawd3.render.Render
 import net.liquidev.dawd3.render.TextureStrip
@@ -12,6 +16,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.BlockPos
 import org.lwjgl.glfw.GLFW
+import java.util.*
 
 class Rack(
     override var width: Float,
@@ -20,10 +25,10 @@ class Rack(
     shownDevices: Iterable<BlockPos>,
 ) : Widget<Unit, Message>(0f, 0f) {
 
-    private val sidebar = Sidebar(0f, 0f, 160f, 0f)
+    private val sidebar = Sidebar(0f, 0f, 0f, 0f)
     private val blockPositionsByWidget = hashMapOf<DeviceWidget, BlockPos>()
 
-    private val shelves = MutableList(10) { Shelf(0f, 0f, width) }
+    private val shelves = mutableListOf<Shelf>()
 
     enum class DragPlace {
         Sidebar,
@@ -33,6 +38,7 @@ class Rack(
     data class DraggedWindow(
         val window: Window,
         val source: DragPlace,
+        val indexInSource: Int,
         val byX: Float,
         val byY: Float,
 
@@ -42,13 +48,44 @@ class Rack(
     private var draggedWindow: DraggedWindow? = null
 
     init {
+        val shelvesByUuid = hashMapOf<UUID, Shelf>()
+
         for (blockPosition in shownDevices) {
             val blockEntity = world.getBlockEntity(blockPosition) as? DeviceBlockEntity ?: continue
-            val widget = blockEntity.descriptor.ui?.open(blockEntity.controls, x = 0f, y = 0f)
-            if (widget != null) {
-                sidebar.windows.add(widget)
-                blockPositionsByWidget[widget] = blockPosition
+            for (shelfUuid in blockEntity.shelfOrder) {
+                if (shelfUuid !in shelvesByUuid) {
+                    val shelf = Shelf(0f, 0f, width, shelfUuid)
+                    shelves.add(shelf)
+                    shelvesByUuid[shelfUuid] = shelf
+                }
             }
+        }
+
+        for (blockPosition in shownDevices) {
+            val blockEntity = world.getBlockEntity(blockPosition) as? DeviceBlockEntity ?: continue
+            val window = blockEntity.descriptor.ui?.open(blockEntity.controls, x = 0f, y = 0f)
+            if (window != null) {
+                val shelfUuid = blockEntity.shelf
+                if (shelfUuid != null) {
+                    shelvesByUuid[shelfUuid]?.windows?.add(window)
+                } else {
+                    sidebar.windows.add(window)
+                }
+                blockPositionsByWidget[window] = blockPosition
+            }
+        }
+        removeEmptyShelvesFromEnd()
+        addEmptyShelfIfNotPresent()
+
+        sortWindowsInContainer(sidebar.windows)
+        shelves.forEach { sortWindowsInContainer(it.windows) }
+    }
+
+    private fun <W : DeviceWidget> sortWindowsInContainer(container: MutableList<W>) {
+        container.sortBy { window ->
+            val blockPosition = blockPositionsByWidget[window]
+            val blockEntity = world.getBlockEntity(blockPosition) as? DeviceBlockEntity
+            blockEntity?.sortPriority ?: Int.MAX_VALUE
         }
     }
 
@@ -67,6 +104,9 @@ class Rack(
         for (shelf in shelves) {
             shelf.draw(matrices, mouseX, mouseY, deltaTime)
         }
+        if (shelves.size == 1 && shelves.last().windows.isEmpty()) {
+            shelves.last().drawUsageHint(matrices)
+        }
 
         sidebar.draw(matrices, mouseX, mouseY, deltaTime)
 
@@ -83,7 +123,6 @@ class Rack(
             )
 
             val destination = findDragDestination(mouseX, mouseY)
-            println(destination)
             when (destination?.place) {
                 DragPlace.Sidebar -> {
                     sidebar.drawInside(matrices) {
@@ -91,7 +130,7 @@ class Rack(
                             Sidebar.padding
                         } else if (destination.indexInPlace == sidebar.windows.size) {
                             val window = sidebar.windows.last()
-                            window.y + window.height - Sidebar.spacingBetweenWindows / 2f
+                            window.y + window.height + Sidebar.spacingBetweenWindows / 2f
                         } else {
                             val window = sidebar.windows[destination.indexInPlace]
                             window.y - Sidebar.spacingBetweenWindows / 2f
@@ -143,7 +182,7 @@ class Rack(
         source: DragPlace,
         sourceShelfIndex: Int = 0,
     ): Message {
-        for (window in windows) {
+        windows.forEachIndexed { index, window ->
             val blockPosition = blockPositionsByWidget[window]!!
             val windowRelativeEvent = event.relativeTo(window.x, window.y)
             val windowMessage =
@@ -153,6 +192,7 @@ class Rack(
                     DraggedWindow(
                         window,
                         source,
+                        index,
                         windowMessage.x,
                         windowMessage.y,
                         sourceShelfIndex
@@ -192,21 +232,38 @@ class Rack(
             if (draggedWindow != null) {
                 val destination = findDragDestination(event.mouseX, event.mouseY)
                 if (destination != null) {
-                    removeWindowFromSource(
-                        draggedWindow.source,
-                        draggedWindow.sourceShelfIndex,
-                        draggedWindow.window,
-                    )
-                    when (destination.place) {
-                        DragPlace.Sidebar -> sidebar.windows.add(
-                            destination.indexInPlace,
-                            draggedWindow.window
-                        )
-                        DragPlace.Shelf -> shelves[destination.shelfIndex].windows.add(
-                            destination.indexInPlace,
-                            draggedWindow.window
-                        )
+                    val fromList: MutableList<Window> = when (draggedWindow.source) {
+                        DragPlace.Sidebar -> sidebar.windows
+                        DragPlace.Shelf -> shelves[draggedWindow.sourceShelfIndex].windows
                     }
+                    val toList: MutableList<Window> = when (destination.place) {
+                        DragPlace.Sidebar -> sidebar.windows
+                        DragPlace.Shelf -> shelves[destination.shelfIndex].windows
+                    }
+                    moveElement(
+                        fromList,
+                        fromIndex = draggedWindow.indexInSource,
+                        toList,
+                        toIndex = destination.indexInPlace
+                    )
+
+                    val blockPosition = blockPositionsByWidget[draggedWindow.window]
+                    if (blockPosition != null) {
+                        when (destination.place) {
+                            DragPlace.Shelf -> {
+                                val shelf = shelves[destination.shelfIndex]
+                                updateBlockData(blockPosition, shelf.uuid)
+                            }
+                            DragPlace.Sidebar -> {
+                                updateBlockData(blockPosition, null)
+                            }
+                        }
+                    }
+
+                    removeEmptyShelvesFromEnd()
+                    addEmptyShelfIfNotPresent()
+                    updateBlockPriorities(fromList)
+                    updateBlockPriorities(toList)
                     reflow()
                 }
             }
@@ -214,6 +271,27 @@ class Rack(
         }
 
         return Message.eventIgnored
+    }
+
+    private fun removeEmptyShelvesFromEnd() {
+        while (shelves.size > 1 && shelves.last().windows.isEmpty()) {
+            shelves.removeLast()
+        }
+    }
+
+    private fun addEmptyShelfIfNotPresent() {
+        if (shelves.size == 0 || shelves.last().windows.isNotEmpty()) {
+            shelves.add(Shelf(0f, 0f, width, UUID.randomUUID()))
+        }
+    }
+
+    private fun <W : DeviceWidget> updateBlockPriorities(windows: MutableList<W>) {
+        val packetEntries = mutableListOf<ReorderRack.Entry>()
+        windows.forEachIndexed { index, window ->
+            val blockPosition = blockPositionsByWidget[window] ?: return@forEachIndexed
+            packetEntries.add(ReorderRack.Entry(blockPosition, index))
+        }
+        ClientPlayNetworking.send(ReorderRack.id, ReorderRack(packetEntries).serialize())
     }
 
     internal data class DragDestination(
@@ -238,22 +316,8 @@ class Rack(
         return null
     }
 
-    private fun removeWindowFromSource(
-        source: DragPlace,
-        indexOfSource: Int,
-        window: Window,
-    ) {
-        when (source) {
-            DragPlace.Sidebar -> {
-                sidebar.windows.remove(window)
-            }
-            DragPlace.Shelf -> {
-                shelves[indexOfSource].windows.remove(window)
-            }
-        }
-    }
-
     override fun reflow() {
+        sidebar.width = if (sidebar.windows.isNotEmpty()) 160f else 16f
         sidebar.x = width - sidebar.width
         sidebar.height = height
         sidebar.reflow()
@@ -262,9 +326,19 @@ class Rack(
         for (shelf in shelves) {
             shelf.reflow()
             shelf.y = dy
-            shelf.width = width
+            shelf.width = width - sidebar.width
             dy += shelf.height
         }
+    }
+
+    private fun updateBlockData(editedDevicePosition: BlockPos, newShelfUuid: UUID?) {
+        ClientPlayNetworking.send(
+            EditRack.id, EditRack(
+                editedDevicePosition,
+                shelf = newShelfUuid,
+                shelfOrder = shelves.map { it.uuid }.toTypedArray()
+            ).serialize()
+        )
     }
 
     companion object {

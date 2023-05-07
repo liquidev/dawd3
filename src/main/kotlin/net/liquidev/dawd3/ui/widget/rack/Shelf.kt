@@ -1,5 +1,6 @@
 package net.liquidev.dawd3.ui.widget.rack
 
+import net.liquidev.dawd3.common.rgba
 import net.liquidev.dawd3.render.Render
 import net.liquidev.dawd3.render.TextureStrip
 import net.liquidev.dawd3.ui.Event
@@ -8,9 +9,16 @@ import net.liquidev.dawd3.ui.RackScreen
 import net.liquidev.dawd3.ui.widget.Widget
 import net.liquidev.dawd3.ui.widget.Window
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.text.Text
+import java.util.*
 import kotlin.math.max
 
-class Shelf(x: Float, y: Float, override var width: Float) : Widget<Nothing, Message>(x, y) {
+class Shelf(
+    x: Float,
+    y: Float,
+    override var width: Float,
+    val uuid: UUID,
+) : Widget<Nothing, Message>(x, y) {
     override var height = 128f
         private set
 
@@ -36,6 +44,20 @@ class Shelf(x: Float, y: Float, override var width: Float) : Widget<Nothing, Mes
                 RackScreen.atlas,
                 spacer
             )
+        }
+    }
+
+    fun drawUsageHint(matrices: MatrixStack) {
+        drawInside(matrices) {
+            Render.colorized(1f, 1f, 1f, 0.6f) {
+                Render.textCentered(
+                    matrices,
+                    width / 2f,
+                    height / 2f - 4,
+                    Text.translatable("screen.dawd3.rack.shelf_hint"),
+                    rgba(255, 255, 255, 127)
+                )
+            }
         }
     }
 

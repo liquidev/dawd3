@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack
 class Sidebar(
     x: Float,
     y: Float,
-    override val width: Float,
+    override var width: Float,
     override var height: Float,
 ) : Widget<Nothing, Message>(x, y) {
 
