@@ -7,6 +7,7 @@ assignees: ''
 
 ---
 
+- **Controls:** […]
 - **Inputs:** […]
 - **Does:** describe what the device does
 - **Outputs:** […]
